@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils'
 import { signOutAction } from '@/app/actions'
 
 const NAV_LINKS = [
-  { href: '/noticias', label: 'Noticias' },
-  { href: '/jugadores', label: 'Jugadores' },
-  { href: '/calendario', label: 'Calendario' },
+  { href: '/noticias', label: 'Noticias del Show' },
+  { href: '/jugadores', label: 'Influencers' },
+  { href: '/calendario', label: 'Próximos Duelos' },
   { href: '/comunidad', label: 'Comunidad' },
 ]
 
@@ -31,18 +31,19 @@ export default function Navbar({ userName }: { userName?: string | null }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group" aria-label="Colombia 2026 - Inicio">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110"
-                style={{ background: 'linear-gradient(135deg, var(--yellow), var(--blue), var(--red))' }}
-              >
-                <Shield className="w-4 h-4 text-white" />
+            <Link href="/" className="flex items-center gap-2.5 group" aria-label="Micasino TV Show - Inicio">
+              <div className="relative w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
+                <img 
+                  src="/logo.png" 
+                  alt="Micasino TV Show Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span
-                className="font-display text-xl tracking-widest"
+                className="font-display text-xl tracking-widest uppercase"
                 style={{ color: 'var(--text-primary)' }}
               >
-                COLOMBIA <span style={{ color: 'var(--yellow)' }}>2026</span>
+                Micasino <span style={{ color: 'var(--yellow)' }}>TV Show</span>
               </span>
             </Link>
 

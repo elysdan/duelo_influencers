@@ -66,3 +66,28 @@ export async function fetchRecentOpinions(page: number = 1, limit: number = 3) {
     return { success: false, error: 'Failed to fetch opinions' }
   }
 }
+
+export async function postVideoComment(content: string) {
+  const session = await auth()
+  if (!session?.user?.id) return { success: false, error: 'Unauthorized' }
+  if (!content || content.trim() === '') return { success: false, error: 'Comment content cannot be empty' }
+  if (content.length > 300) return { success: false, error: 'Comment exceeds 300 characters' }
+
+  try {
+    // Asociamos los comentarios del video principal a un influencer predeterminado de los cargados (ej. luis-diaz)
+    // para mantener la compatibilidad con el esquema relacional actual y que aparezca en el listado.
+    const defaultPlayerId = 'luis-diaz'
+
+    await db.insert(comments).values({
+      content: content.trim(),
+      authorId: session.user.id,
+      playerId: defaultPlayerId,
+      newsId: null,
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error posting video comment:', error)
+    return { success: false, error: 'Failed to post comment' }
+  }
+}

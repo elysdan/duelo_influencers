@@ -3,22 +3,23 @@
 @layer base {
   :root {
     /* Fondo */
-    --bg-base: #0e1e4d;
-    --bg-card: #0E1118;
-    --bg-elevated: #151922;
+    --bg-base: #06070b;
+    --bg-card: #0b0e14;
+    --bg-elevated: #111622;
 
-    /* Tricolor Colombiano — tonos modernos */
+    /* Micasino Gold & Dark - tonos premium */
     --yellow: #F5C518;
     --yellow-dark: #C49A10;
-    --yellow-glow: rgba(245, 197, 24, 0.15);
+    --yellow-glow: rgba(245, 197, 24, 0.12);
 
-    --blue: #0038A8;
-    --blue-light: #1A52CC;
-    --blue-glow: rgba(0, 56, 168, 0.20);
+    /* Adaptación de colores antiguos a tonos oscuros de casino para compatibilidad */
+    --blue: #141b29;
+    --blue-light: #1d283d;
+    --blue-glow: rgba(29, 40, 61, 0.15);
 
-    --red: #CE1126;
-    --red-light: #E8253E;
-    --red-glow: rgba(206, 17, 38, 0.15);
+    --red: #3b0e13;
+    --red-light: #57151c;
+    --red-glow: rgba(87, 21, 28, 0.1);
 
     /* Textos */
     --text-primary: #F0F2F7;
@@ -26,13 +27,13 @@
     --text-muted: #5A6478;
 
     /* Glassmorphism */
-    --glass: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover: rgba(255, 255, 255, 0.07);
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-hover: rgba(255, 255, 255, 0.06);
 
     /* Bordes */
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.15);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.12);
 
     /* Radios */
     --radius: 12px;
@@ -97,30 +98,29 @@
     border-color: var(--border-strong);
   }
 
-  /* Gradiente tricolor */
+  /* Gradiente Casino Gold */
   .tricolor-gradient {
     background: linear-gradient(
       135deg,
       var(--yellow) 0%,
-      var(--yellow-dark) 30%,
-      var(--blue) 60%,
-      var(--red) 100%
+      var(--yellow-dark) 50%,
+      #E2B616 100%
     );
   }
 
   .tricolor-text {
     background: linear-gradient(
       90deg,
-      var(--yellow) 0%,
-      var(--blue-light) 50%,
-      var(--red-light) 100%
+      #FFF6D1 0%,
+      var(--yellow) 50%,
+      var(--yellow-dark) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Borde animado tricolor */
+  /* Borde animado de oro */
   .tricolor-border {
     position: relative;
     border: 1px solid transparent;
@@ -132,7 +132,7 @@
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, var(--yellow), var(--blue), var(--red));
+    background: linear-gradient(135deg, var(--yellow), var(--yellow-dark), #E2B616);
     z-index: -1;
     opacity: 0;
     transition: opacity 0.3s ease;

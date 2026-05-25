@@ -12,16 +12,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Colombia 2026 | La Tri al Mundial',
-    template: '%s | Colombia 2026',
+    default: 'Micasino TV Show | Micro Duelo de Influencers',
+    template: '%s | Micasino TV Show',
   },
   description:
-    'La plataforma definitiva de la Selección Colombia para el Mundial 2026. Noticias, jugadores, estadísticas y comunidad en un solo lugar.',
-  keywords: ['Colombia', 'Mundial 2026', 'Selección Colombia', 'Tricolor', 'Fútbol'],
+    'El show televisivo oficial de Micasino. Micro duelos de influencers en vivo, noticias del show, opiniones y comunidad en un solo lugar.',
+  keywords: ['Micasino', 'TV Show', 'Micro Duelos', 'Influencers', 'En Vivo', 'Comunidad'],
   openGraph: {
-    title: 'Colombia 2026 | La Tri al Mundial',
-    description: 'La plataforma definitiva de la Selección Colombia para el Mundial 2026.',
-    locale: 'es_CO',
+    title: 'Micasino TV Show | Micro Duelo de Influencers',
+    description: 'El show televisivo oficial de Micasino. Micro duelos de influencers en vivo.',
+    locale: 'es_VE',
     type: 'website',
   },
 }
