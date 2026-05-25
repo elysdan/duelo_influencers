@@ -11,8 +11,8 @@ import fs from 'fs'
 import path from 'path'
 
 export const metadata = {
-  title: 'Mi Perfil | Selección Colombia',
-  description: 'Configura tu perfil para unirte a la hinchada',
+  title: 'Mi Perfil | Micasino TV Show',
+  description: 'Configura tu perfil para unirte a la comunidad',
 }
 
 export default async function ProfilePage() {
@@ -75,7 +75,7 @@ export default async function ProfilePage() {
               MI PERFIL
             </h1>
             <p className="text-gray-300 text-lg max-w-2xl">
-              Sube de nivel tu presencia en la comunidad. Sube tu foto, elige tu avatar y personaliza cómo te verán los demás hinchas.
+              Sube de nivel tu presencia en la comunidad. Sube tu foto, elige tu avatar y personaliza cómo te verán los demás usuarios.
             </p>
           </header>
 

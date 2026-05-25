@@ -293,7 +293,7 @@ export default function ProfileForm({
       {/* Avatars section */}
       <div className="space-y-4 pt-4 border-t border-white/10">
         <label className="block text-sm font-bold text-white/80">
-          Elige tu Avatar de la Selección
+          Elige tu Avatar del Show
         </label>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {availableAvatars.map((url, i) => {

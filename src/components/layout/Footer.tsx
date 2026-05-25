@@ -37,9 +37,9 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               {[
-                { href: '/noticias', label: 'Noticias del Show' },
                 { href: '/jugadores', label: 'Influencers' },
-                { href: '/calendario', label: 'Próximos Duelos' },
+                { href: '/podcast', label: 'Podcast' },
+                { href: '/comunidad', label: 'Comunidad' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

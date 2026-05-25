@@ -1,8 +1,7 @@
 import Link from 'next/link'
-import { Shield } from 'lucide-react'
 
 export const metadata = {
-  title: 'Hasta Pronto | Selección Colombia',
+  title: 'Hasta Pronto | Micasino TV Show',
 }
 
 export default function VuelveProntoPage() {
@@ -12,8 +11,8 @@ export default function VuelveProntoPage() {
       
       <div className="relative z-10 text-center max-w-lg mx-auto bg-black/40 border border-white/10 rounded-3xl p-10 backdrop-blur-md shadow-2xl">
         <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center animate-bounce shadow-[0_0_30px_rgba(255,204,0,0.4)]" style={{ background: 'linear-gradient(135deg, var(--yellow), var(--blue), var(--red))' }}>
-            <Shield className="w-10 h-10 text-white" />
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center animate-bounce shadow-[0_0_30px_rgba(255,204,0,0.3)] bg-black/50 border border-yellow-500/30">
+            <img src="/logo.png" alt="Micasino TV Show Logo" className="w-12 h-12 object-contain" />
           </div>
         </div>
         
@@ -21,7 +20,7 @@ export default function VuelveProntoPage() {
           ¡HASTA PRONTO!
         </h1>
         <p className="text-gray-300 text-lg mb-8">
-          Has cerrado sesión correctamente. La tribuna siempre tendrá un lugar para ti en el próximo partido.
+          Has cerrado sesión correctamente. ¡Te esperamos pronto para disfrutar de más micro duelos de influencers!
         </p>
 
         <Link

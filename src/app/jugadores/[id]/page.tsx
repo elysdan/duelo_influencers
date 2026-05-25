@@ -15,16 +15,16 @@ import HypeButton from '@/components/shared/HypeButton'
 import { commentLikes, playerHypes } from '@/db/schema'
 
 const POSITION_LABELS: Record<string, string> = {
-  POR: 'Portero', DEF: 'Defensa', MED: 'Centrocampista', DEL: 'Delantero', ENT: 'Entrenador'
+  POR: 'Slots Creator', DEF: 'Roulette Creator', MED: 'Live Show Host', DEL: 'VIP Player', ENT: 'TV Show Host'
 }
 const POSITION_COLORS: Record<string, string> = {
-  POR: 'var(--yellow)', DEF: '#3b82f6', MED: '#8b5cf6', DEL: 'var(--red-light)', ENT: '#a3a3a3'
+  POR: 'var(--yellow)', DEF: '#3b82f6', MED: '#8b5cf6', DEL: '#ef4444', ENT: '#a3a3a3'
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const [player] = await db.select({ name: players.name }).from(players).where(eq(players.id, id)).limit(1)
-  return { title: `${player?.name || 'Jugador'} | Colombia 2026` }
+  return { title: `${player?.name || 'Influencer'} | Micasino TV Show` }
 }
 
 export default async function PlayerProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -131,7 +131,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
             style={{ color: 'var(--text-muted)' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Volver a la plantilla
+            Volver a Influencers
           </Link>
 
           <div className="flex flex-col gap-10">
@@ -170,7 +170,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                 </h2>
                 <div className="w-16 h-[3px] bg-yellow-500 mb-6 rounded-full" style={{ background: posColor }} />
                 <p className="text-base leading-relaxed flex-grow text-justify" style={{ color: 'var(--text-secondary)' }}>
-                  {player.bio || `${player.name} es un elemento clave para la Selección Colombia en su camino al Mundial 2026. Con constancia y habilidades en su club actual ${player.club}, entrega todo el esfuerzo requerido para enfrentar a los mejores del mundo defendiendo los colores de la tricolor.`}
+                  {player.bio || `${player.name} es una estrella de Micasino TV Show. Con talento, carisma y habilidades excepcionales, entrega todo su esfuerzo y diversión en cada duelo de influencers representando al canal oficial.`}
                 </p>
               </div>
             </div>
@@ -194,12 +194,6 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                     <Shield className="w-5 h-5 text-gray-500" />
                     {player.club}
                   </span>
-                  {player.number && (
-                    <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
-                      <span className="font-mono-stats text-sm uppercase tracking-widest opacity-80">Dorsal #{player.number}</span>
-                    </>
-                  )}
                 </div>
               </div>
 
@@ -231,8 +225,8 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
 
             {/* ====== Row 4: Noticias ====== */}
             <div className="mt-8">
-              <h2 className="font-display text-4xl mb-6 border-b pb-4" style={{ color: 'var(--text-primary)', borderColor: 'var(--border)' }}>
-                NOTICIAS
+              <h2 className="font-display text-4xl mb-6 border-b pb-4 animate-pulse" style={{ color: 'var(--text-primary)', borderColor: 'var(--border)' }}>
+                NOTICIAS DEL SHOW
               </h2>
               {displayNews.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -268,7 +262,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
             {/* ====== Row 5: Opiniones ====== */}
             <div className="mt-8">
               <h2 className="font-display text-4xl mb-6 border-b pb-4" style={{ color: 'var(--text-primary)', borderColor: 'var(--border)' }}>
-                OPINIONES
+                COMENTARIOS
               </h2>
               
               <div className="flex flex-col gap-4 mb-10">
@@ -300,12 +294,12 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
 
               {/* Call to action */}
               <div className="text-center mt-4 p-8 bg-black/20 border border-white/5 rounded-3xl">
-                <p className="font-display text-4xl mb-6 tracking-widest" style={{ color: 'var(--text-primary)' }}>¿Quieres dejar tu opinión?</p>
+                <p className="font-display text-4xl mb-6 tracking-widest" style={{ color: 'var(--text-primary)' }}>¿Quieres dejar tu comentario?</p>
                 {session?.user ? (
                   <CommentForm postAction={postComment} />
                 ) : (
                   <Link href="/login" className="px-8 py-4 rounded-xl font-bold inline-block transition-all hover:scale-105 hover:bg-white border text-sm" style={{ borderColor: 'var(--text-muted)', color: 'var(--bg-base)', background: 'var(--text-primary)' }}>
-                    Inicia sesión para opinar
+                    Inicia sesión para comentar
                   </Link>
                 )}
               </div>

@@ -11,7 +11,7 @@ import CommunityForm from './CommunityForm'
 import CommentCard from '@/components/shared/CommentCard'
 
 export async function generateMetadata() {
-  return { title: 'Comunidad de los Cafeteros | Colombia 2026' }
+  return { title: 'Comunidad del Show | Micasino TV Show' }
 }
 
 export default async function ComunidadPage() {
@@ -53,10 +53,10 @@ export default async function ComunidadPage() {
           
           <div className="mb-10 text-center">
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-yellow-500 mb-4 tracking-wider" style={{ textShadow: '0 0 40px rgba(234, 179, 8, 0.3)' }}>
-              COMUNIDAD DE LOS CAFETEROS
+              COMUNIDAD DEL SHOW
             </h1>
             <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto">
-              El espacio libre para alentar a la tricolor, discutir las tácticas y compartir la pasión. Conecta con otros hinchas de la Selección Colombia.
+              El foro oficial para debatir sobre los micro duelos de influencers, compartir tus opiniones en tiempo real y apoyar a tus participantes favoritos.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export default async function ComunidadPage() {
             <div className="glass-card p-6 rounded-3xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left border border-white/5">
               <div>
                 <h3 className="text-base font-bold text-white mb-1">Únete a la conversación</h3>
-                <p className="text-xs text-gray-400">Inicia sesión para compartir tu pasión por la Selección.</p>
+                <p className="text-xs text-gray-400">Inicia sesión para participar en los debates de la comunidad.</p>
               </div>
               <Link href="/login" className="px-6 py-2.5 rounded-full font-bold text-sm bg-yellow-500 text-black hover:bg-yellow-400 transition-colors shrink-0">
                 Iniciar Sesión
@@ -96,7 +96,7 @@ export default async function ComunidadPage() {
               <div className="glass-card rounded-3xl p-16 text-center flex flex-col items-center justify-center border-dashed border-2 border-white/10 opacity-70">
                 <MessageSquareText className="w-12 h-12 mb-4 text-gray-500" />
                 <p className="text-base font-medium text-gray-200">El muro está vacío</p>
-                <p className="text-sm mt-1 text-gray-400">Sé el primero en alentar a la Selección en la Comunidad de los Cafeteros.</p>
+                <p className="text-sm mt-1 text-gray-400">Sé el primero en compartir tu opinión sobre los duelos en la Comunidad de Micasino TV Show.</p>
               </div>
             )}
           </div>

@@ -29,7 +29,7 @@ export default function CommunityForm() {
           name="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="¿Qué quieres compartir con la hinchada tricolor hoy?"
+          placeholder="¿Qué quieres compartir hoy sobre el show o tus influencers favoritos?"
           className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-base text-white resize-none focus:outline-none focus:border-yellow-500 min-h-[120px] transition-colors"
           required
         />

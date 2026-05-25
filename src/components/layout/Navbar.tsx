@@ -8,9 +8,8 @@ import { cn } from '@/lib/utils'
 import { signOutAction } from '@/app/actions'
 
 const NAV_LINKS = [
-  { href: '/noticias', label: 'Noticias del Show' },
   { href: '/jugadores', label: 'Influencers' },
-  { href: '/calendario', label: 'Próximos Duelos' },
+  { href: '/podcast', label: 'Podcast' },
   { href: '/comunidad', label: 'Comunidad' },
 ]
 
