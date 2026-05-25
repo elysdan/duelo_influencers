@@ -1,74 +1,110 @@
-# Colombia 2026 (Road to World Cup)
+# Micasino TV Show 🎰🔥
 
-Plataforma interactiva para la base de seguidores (Fan Engagement) de la Selección de Fútbol de Colombia, enfocada en la Copa Mundial de la FIFA 2026. Desarrollada con capacidades SSR modernas y construida bajo el ecosistema de **Next.js (App Router)**.
+Plataforma oficial para los **micro duelos de influencers** y transmisiones de entretenimiento premium de **Micasino TV Show**. Diseñada con una estética oscura de casino (Oro y Negro) de alta gama, capacidades Server-Side Rendering (SSR) modernas y construida bajo el ecosistema de **Next.js (App Router)**.
 
-## Stack Tecnológico
+La plataforma resuelve de forma innovadora las limitaciones que imponen aplicaciones tradicionales como YouTube sobre contenido de apuestas y casinos, implementando un reproductor inteligente jerárquico redundante y una consola completa de administración.
+
+---
+
+## 🌟 Funcionalidades Principales
+
+### 1. Estética y Colores (Casino Premium)
+- **Tema Oscuro Oro:** Visualización inmersiva basada en negro profundo (`#06070b`), acentos de oro metalizado (`#F5C518`), bordes neón suaves y paneles con transparencias "glassmorphism".
+- **Identidad de Marca:** Integración del logotipo oficial dorado del trébol (`/logo.png`) y el nombre unificado **Micasino TV Show**.
+
+### 2. Landing Page Inmersiva (Estilo YouTube)
+- **Reproductor Widescreen Premium:** Un reproductor de video HTML5 en relación de aspecto 16:9 fijo en la cabecera. Cuenta con controles ultra-minimalistas personalizados (seek-bar y pantalla completa).
+- **Detalles e Interacción del Show:**
+  - Canal verificado con contadores de suscriptores y botón interactivo de suscripción animada.
+  - Botón de "Me gusta" dinámico con incrementos en base de datos.
+  - Botón de "Compartir" con copia al portapapeles y avisos Toast.
+  - Descripción expandible del show con hashtags del día.
+- **Sección de Comentarios Integrada:** Conversión del antiguo muro en una sección de comentarios de YouTube real (avatares redondeados, hilos y caja de entrada de comentarios interactiva).
+
+### 3. Podcast con Reproductor Inteligente y Auto-Fallback (SmartPlayer)
+- **Ruteo de Video Redundante:** Para evadir bloqueos y bajas de video debido al vocabulario de casino ("apuestas", "casino", "gana algo"), el reproductor de podcast implementa una jerarquía silenciosa y transparente:
+  1. **YouTube (Opción 1 - Principal):** Se conecta a la API Iframe de YouTube. Si el video es borrado, privado, o está bloqueado en embeds, el reproductor lo detecta y pasa al siguiente nodo.
+  2. **Vimeo (Opción 2 - Respaldo A):** Si falla YouTube, transiciona a Vimeo automáticamente en milisegundos.
+  3. **DailyMotion (Opción 3 - Respaldo B):** Si falla Vimeo, salta a DailyMotion.
+- **Monitoreo CDN en Vivo:** Un panel visual integrado al reproductor muestra el estado en tiempo real de cada uno de los servidores de video (Node 1, Node 2, Node 3) con códigos de estado, junto con una opción para forzar el salto manual si es necesario.
+- **Transición Transparente:** Muestra un spinner animado premium con el logo de trébol dorado para que la transición sea percibida como una carga normal y fluida por el espectador.
+
+### 4. Consola de Administración y Subidas
+- **Formulario de Carga:** Permite definir el número de episodio, título, descripción, enlaces de video para cada una de las 3 plataformas, y subir imágenes locales de miniatura.
+- **Extracción de IDs Automática:** Las Server Actions procesan los enlaces y parsean las URLs completas ingresadas (YouTube, Vimeo, DailyMotion) para extraer únicamente las IDs necesarias de forma automatizada.
+- **Subida de Archivos:** Las miniaturas locales subidas se procesan en el servidor y se guardan bajo `uploads/`, siendo servidas por la API interna del proyecto.
+- **Simulador de Admin Local:** Incluye un switch de *"Simulación de Admin"* visible únicamente en desarrollo local (`development`) para poder testear la consola y carga de imágenes de inmediato sin requerir manipular roles SQL en tu base de datos local.
+- **Precarga Dinámica (Seeder):** Permite sembrar 3 episodios reales con influencers al hacer clic en un botón. *Nota: El primer episodio está configurado intencionalmente con un enlace roto en YouTube y uno funcional en Vimeo para probar el fallback de forma instantánea.*
+
+### 5. Secciones de Influencers (Plantilla del Show)
+- **Grid Unificado:** Presenta a todos los influencers en una cuadrícula premium ordenada por popularidad (Hype) con hover de resplandor dorado, libre de dorsales o divisiones deportivas antiguas.
+- **Roles de Casino:** Los perfiles de participantes mapean de forma inmersiva las antiguas abreviaturas deportivas por roles de casino reales (Slots Creator, Roulette Creator, TV Host, etc.).
+
+### 6. Comunidad del Show
+- Foro de debate premium libre de alusiones futbolísticas tradicionales. El espacio oficial para que los usuarios puedan compartir posts y debatir sobre las pruebas, los participantes y los resultados del show en tiempo real.
+
+---
+
+## 🛠️ Stack Tecnológico
 
 El proyecto sigue una arquitectura Fullstack moderna optimizada para Vercel o similares edge-runtimes:
 
-*   **Framework:** Next.js 15 (React 19) con paradigma de **App Router** (`app/`).
-*   **Lenguaje:** TypeScript estricto en el 100% del código base para seguridad de tipos end-to-end.
-*   **Base de Datos & ORM:** PostgreSQL consumido a través de **Drizzle ORM** (Tipado seguro, migraciones ágiles basadas en código y esquemas relacionales).
-*   **Autenticación:** Auth.js v5 (NextAuth) con `@auth/drizzle-adapter`. Gestión por Credentials utilizando `bcryptjs` para el hashing asíncrono de contraseñas.
-*   **Estilos:** Tailwind CSS con variables nativas en `globals.css` para implementar una estética estandarizada **Dark Glassmorphism** (fondos translúcidos con `backdrop-filter` e intensos acentos).
-*   **Iconografía y Utilidades:** `lucide-react` para iconos semánticos y SVG ligeros y `clsx`/`tailwind-merge` (`cn` util) para resoluciones algorítmicas de clases CSS en componentes cliente/servidor.
+- **Framework:** Next.js 16 (React 19) con paradigma de **App Router** (`app/`).
+- **Lenguaje:** TypeScript estricto en el 100% del código base para seguridad de tipos.
+- **Base de Datos & ORM:** PostgreSQL con **Drizzle ORM** (Tipado seguro y migraciones ágiles).
+- **Autenticación:** Auth.js v5 (NextAuth) con `@auth/drizzle-adapter` y `bcryptjs` para el hashing de contraseñas.
+- **Estilos:** Tailwind CSS con variables compuestas en `globals.css` para implementar la estética **Casino Gold**.
+- **Iconografía:** `lucide-react` para iconos vectoriales ligeros.
 
-## Arquitectura del Proyecto
+---
 
-El código fuente utiliza directivas estrictas (`'use client'`, `'use server'`) para delimitar las fronteras de red e inferir la seguridad de los componentes SSR vs CSR:
+## 📂 Arquitectura del Proyecto
 
 ```text
 colombia-2026/
-├── public/                 # Assets estáticos (jugadores WebP pre-cacheados)
-├── scripts/                # Scripts Node independientes
-│   ├── seed.ts             # Volcado inicial de DB (plantilla, roles 'ENT'/'POR'...)
-│   └── setup-db.mjs        # Rutinas tempranas de la capa base de datos provisional
+├── public/                 # Assets estáticos (Miniaturas y cartoons)
+├── uploads/                # Archivos locales de miniaturas subidas por el admin
+├── scripts/                # Scripts de base de datos
+│   └── seed.ts             # Volcado inicial de la base de datos de influencers
 ├── src/
 │   ├── app/                # Enrutador Físico (App Router)
 │   │   ├── (auth)          # Rutas agrupadas para `/login` y `/register`
-│   │   ├── api/auth/       # Edge API routes requeridos por NextAuth Auth.js
-│   │   ├── comunidad/      # Plataforma X-Like de muro de soporte. Lógica SSR con Server Actions.
-│   │   ├── jugadores/      # Feed CSR/SSR de Plantilla.
-│   │   │   └── [id]/       # Dynamic Route / Templates para ficha automatizada.
-│   │   ├── globals.css     # Design System Core: Variables de paleta de Colombia y utilities.
-│   │   ├── layout.tsx      # RootLayout con providers, tipografías Inters/Oswald.
-│   │   └── page.tsx        # Homepage (Hero, Carruseles, Countdown)
+│   │   ├── api/uploads/    # Ruta de API que sirve las imágenes locales de uploads/
+│   │   ├── comunidad/      # Foro de debate de Micasino TV Show
+│   │   ├── jugadores/      # Feed unificado de los Influencers y fichas
+│   │   ├── podcast/        # Hub de Podcast, SmartPlayer, Server Actions y Consola Admin
+│   │   ├── vuelve-pronto/  # Página de cierre de sesión temática de Micasino
+│   │   ├── perfil/         # Ajustes de perfil con selector de Avatar del Show
+│   │   ├── globals.css     # Design System Core: Variables de la paleta Casino Gold
+│   │   └── page.tsx        # Homepage (YouTube Style player, comentarios y Sidebar)
 │   ├── components/
-│   │   ├── landing/        # Chunk-Components para Homepage (Carousel, NewsPreview, Hero)
-│   │   └── layout/         # Componentes Shell, como Navbar y Footer.
+│   │   ├── landing/        # VideoPlayer, HomeGrid y RecentOpinions (Comentarios)
+│   │   ├── podcast/        # SmartPlayer y AdminPanel para Podcasts
+│   │   └── layout/         # Componentes Shell, como Navbar y Footer
 │   ├── db/
-│   │   ├── index.ts        # Fichero central que instancia Drizzle
-│   │   └── schema.ts       # Single Source Of Truth de PostgreSQL (Tablas y Relaciones PG)
+│   │   ├── index.ts        # Instancia Drizzle ORM
+│   │   └── schema.ts       # Definición de Tablas (users, comments, podcast_episodes, etc.)
 │   └── lib/
-│       ├── auth.ts         # Wrapper de configuración NextAuth + Callbacks JWT
-│       ├── players-data.ts # Modelos crudos para seeding (Sincronizado)
-│       └── utils.ts        # Utils puras de formateo o TailwindMerge
-├── .env.local              # Fichero de Secrets locales (Git ignored)
-├── drizzle.config.ts       # Directiva interna para el CLI de Drizzle
-└── package.json
+│       ├── auth.ts         # Wrapper de configuración de NextAuth
+│       └── utils.ts        # Funciones utilitarias y TailwindMerge
+├── package.json
+└── drizzle.config.ts       # Configuración CLI de Drizzle
 ```
 
-## Patrones de Diseño Implementados
+---
 
-1. **Server Actions First:** En lugar de crear rutas artificiales en `/api` para acciones transaccionales (Ej: Insertar un comentario), utilizamos la directriz `'use server'` dentro de funciones aisladas que se encargan de comunicarse con Drizzle ORM de manera segura. Esto reduce la latencia en saltos de red.
-2. **Revalidación en Vivo (`revalidatePath`):** Usada extensamente en las mutaciones (Hypes, Nuevos comentarios en el muro general o perfiles de jugadores) para borrar la caché temporal del CDN en el App Router y causar que la UI se actualice sin recargar estados pesados en el cliente.
-3. **Left Joins Optimizados:** Las consultas al muro `/comunidad` y al detalle de `/jugadores/[id]` combinan tablas sin cascadas de N+1 ejecutando query builder queries directas: (`SELECT ... FROM comments LEFT JOIN users ON comments.authorId = users.id WHERE playerId IS NULL`).
+## 🚀 Guía de Inicio Rápido (Quick Start)
 
-## Configuración para Semi-Seniors (Quick Start)
+### Requisitos Previos
+- **Node.js** v24 o superior recomendado.
+- Gestor **pnpm** o **npm**.
+- Instancia local de PostgreSQL corriendo.
 
-### Requisitos previos
-- Node.js LTS (v24 recomendado para entorno local)
-- Gestor `pnpm` o `npm`. (Preferentemente pnpm)
-- Instancia local de PostgreSQL corriendo o String de base de datos Vercel/Neon/Supabase.
-
-### 1. Variables de Entorno (.env.local)
-
-Necesitas replicar un archivo `.env.local` con las variables núcleo.
-
+### 1. Variables de Entorno (`.env.local`)
+Crea un archivo `.env.local` en la raíz del proyecto y define las siguientes variables:
 ```env
-# Ejemplo de .env.local
-DATABASE_URL="postgresql://postgres:user@localhost:5432/nomberedb"
-AUTH_SECRET="cualquier-string-fuerte-generada-con-[openssl rand -base64 32]"
+DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/nombre_db"
+AUTH_SECRET="fuerte-clave-generada-con-[openssl rand -base64 32]"
 AUTH_URL="http://localhost:3000"
 ```
 
@@ -77,25 +113,29 @@ AUTH_URL="http://localhost:3000"
 pnpm install
 ```
 
-### 3. Setup de la Base de Datos (Drizzle ORM)
-Drizzle se encarga de modelar nuestra BD basándose en el esquema estricto TypeScript:
-
+### 3. Inicializar Base de Datos (Drizzle ORM)
+Drizzle se encarga de crear las tablas y las relaciones en PostgreSQL de forma automática basándose en nuestro esquema:
 ```bash
-# Push el schema actual a tu PostgreSQL en tiempo real (Migración Implícita)
+# Push del esquema TypeScript a la base de datos PostgreSQL local
 pnpm run db:push
 
-# Vaciar e insertar la plantilla base "Colombia" (incluyendo a Néstor Lorenzo)
-npx tsx scripts/seed.ts  # o `pnpm run seed` dependiendo del script configurado
+# Sembrar los influencers iniciales del show en la base de datos
+pnpm run seed
 ```
 
-### 4. Lanzar el Servidor y Compilar
+### 4. Lanzar Servidor de Desarrollo
 ```bash
-# Lanzar el servidor de desarrollo con Hot Reload (Turbopack opcional)
 pnpm run dev
 ```
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
-El proyecto correrá en [http://localhost:3000](http://localhost:3000).
+---
 
-## Decisiones y Contextos a futuro
-- **Extensibilidad de Comentarios:** El campo `playerId` y `newsId` en la tabla de `comments` está diseñado para delegar. Si ambos están en `NULL` (como en `/comunidad`), es el canal general. Si `playerId` está asignado como `String`, el front-end empuja renderiza dentro en `/jugadores/[id]`. Altamente escalable.
-- **Rendimiento UI:** Casi todos los assets (`public/players`) y los gradientes del UI (`glass-card`) se procesan directamente como clases CSS compuestas en el Server-Side para no penalizar los Web Vitals del LCP (Largest Contentful Paint).
+## 🧪 Pruebas del Fallback del Reproductor
+Para comprobar de inmediato el fallback del reproductor de video de podcasts:
+1. Accede a la ruta `/podcast` en tu navegador.
+2. Si no ves episodios, activa el interruptor de **"Simular Modo Admin"** en la barra superior amarilla y haz clic en **"Precargar Episodios"**.
+3. Haz clic en el primer episodio del listado inferior: **"Duelo de Titanes: Ibai Llanos vs Rubius"**.
+4. Verás la pantalla de carga e inmediatamente el reproductor intentará conectar a YouTube, y tras detectar que el enlace está roto por el API, **cambiará automáticamente y en milisegundos a Vimeo** (reproduciendo el video correctamente). El monitor de red de la derecha mostrará el ruteo en vivo:
+   - YouTube ➔ `CAÍDO`
+   - Vimeo ➔ `CONECTADO`

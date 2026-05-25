@@ -249,3 +249,17 @@ export const worldCupMatchesRelations = relations(worldCupMatches, ({ one }) => 
   team1: one(soccerTeams, { fields: [worldCupMatches.team1Id], references: [soccerTeams.id], relationName: 'team1Matches' }),
   team2: one(soccerTeams, { fields: [worldCupMatches.team2Id], references: [soccerTeams.id], relationName: 'team2Matches' }),
 }))
+
+// ─── Podcast Episodes ─────────────────────────────────────────────────────────
+
+export const podcastEpisodes = pgTable('podcast_episodes', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  episodeNumber: integer('episode_number').notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  thumbnailUrl: text('thumbnail_url').notNull(),
+  youtubeId: text('youtube_id'),
+  vimeoId: text('vimeo_id'),
+  dailymotionId: text('dailymotion_id'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
