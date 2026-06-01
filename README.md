@@ -12,14 +12,9 @@ La plataforma resuelve de forma innovadora las limitaciones que imponen aplicaci
 - **Tema Oscuro Oro:** Visualización inmersiva basada en negro profundo (`#06070b`), acentos de oro metalizado (`#F5C518`), bordes neón suaves y paneles con transparencias "glassmorphism".
 - **Identidad de Marca:** Integración del logotipo oficial dorado del trébol (`/logo.png`) y el nombre unificado **Micasino TV Show**.
 
-### 2. Landing Page Inmersiva (Estilo YouTube)
+### 2. Landing Page Inmersiva
 - **Reproductor Widescreen Premium:** Un reproductor de video HTML5 en relación de aspecto 16:9 fijo en la cabecera. Cuenta con controles ultra-minimalistas personalizados (seek-bar y pantalla completa).
-- **Detalles e Interacción del Show:**
-  - Canal verificado con contadores de suscriptores y botón interactivo de suscripción animada.
-  - Botón de "Me gusta" dinámico con incrementos en base de datos.
-  - Botón de "Compartir" con copia al portapapeles y avisos Toast.
-  - Descripción expandible del show con hashtags del día.
-- **Sección de Comentarios Integrada:** Conversión del antiguo muro en una sección de comentarios de YouTube real (avatares redondeados, hilos y caja de entrada de comentarios interactiva).
+- **Sección de Comentarios Integrada:** Agregado muro en una sección de comentarios con paginación.
 
 ### 3. Podcast con Reproductor Inteligente y Auto-Fallback (SmartPlayer)
 - **Ruteo de Video Redundante:** Para evadir bloqueos y bajas de video debido al vocabulario de casino ("apuestas", "casino", "gana algo"), el reproductor de podcast implementa una jerarquía silenciosa y transparente:

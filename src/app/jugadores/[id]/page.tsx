@@ -13,6 +13,7 @@ import CommentForm from './CommentForm'
 import CommentCard from '@/components/shared/CommentCard'
 import HypeButton from '@/components/shared/HypeButton'
 import { commentLikes, playerHypes } from '@/db/schema'
+import ClipGrid from '@/components/players/ClipGrid'
 
 const POSITION_LABELS: Record<string, string> = {
   POR: 'Slots Creator', DEF: 'Roulette Creator', MED: 'Live Show Host', DEL: 'VIP Player', ENT: 'TV Show Host'
@@ -207,57 +208,8 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
               </div>
             </div>
 
-            {/* ====== Row 3: Stats ====== */}
-            <div className="grid grid-cols-3 gap-6 mt-4">
-              <div className="glass-card p-8 rounded-3xl flex flex-col items-center justify-center text-center">
-                <span className="font-mono-stats text-5xl sm:text-6xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{player.caps}</span>
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider border-t pt-4 w-16" style={{ color: 'var(--text-muted)', borderColor: posColor }}>Partidos</span>
-              </div>
-              <div className="glass-card p-8 rounded-3xl flex flex-col items-center justify-center text-center">
-                <span className="font-mono-stats text-5xl sm:text-6xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{player.goals}</span>
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider border-t pt-4 w-16" style={{ color: 'var(--text-muted)', borderColor: posColor }}>Goles</span>
-              </div>
-              <div className="glass-card p-8 rounded-3xl flex flex-col items-center justify-center text-center">
-                <span className="font-mono-stats text-5xl sm:text-6xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{player.assists}</span>
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider border-t pt-4 w-20" style={{ color: 'var(--text-muted)', borderColor: posColor }}>Asistencias</span>
-              </div>
-            </div>
-
-            {/* ====== Row 4: Noticias ====== */}
-            <div className="mt-8">
-              <h2 className="font-display text-4xl mb-6 border-b pb-4 animate-pulse" style={{ color: 'var(--text-primary)', borderColor: 'var(--border)' }}>
-                NOTICIAS DEL SHOW
-              </h2>
-              {displayNews.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {displayNews.map(news => (
-                    <a 
-                      key={news.id} 
-                      href={news.externalUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform group flex flex-col"
-                    >
-                      <h4 className="font-semibold text-sm mb-4 line-clamp-2 group-hover:text-white transition-colors">
-                        {news.title}
-                      </h4>
-                      <div className="flex items-center justify-between mt-auto pt-4 border-t" style={{ borderColor: 'var(--border-strong)' }}>
-                        <span className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
-                          {news.publishedAt ? formatRelativeTime(news.publishedAt) : 'Reciente'}
-                        </span>
-                        <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" style={{ color: 'var(--yellow)' }} />
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <div className="glass-card opacity-60 rounded-3xl p-10 text-center flex flex-col items-center justify-center border-dashed border-2">
-                  <p className="text-4xl mb-4">📰</p>
-                  <p className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>Sin noticias recientes</p>
-                  <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Aún no hemos sincronizado noticias para {player.name}.</p>
-                </div>
-              )}
-            </div>
+            {/* ====== Row 3: Clips Grid (Interactive Video clips list) ====== */}
+            <ClipGrid playerName={player.name} />
 
             {/* ====== Row 5: Opiniones ====== */}
             <div className="mt-8">
@@ -286,8 +238,8 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                 ) : (
                   <div className="glass-card opacity-60 rounded-3xl p-10 text-center flex flex-col items-center justify-center border-dashed border-2">
                     <MessageSquareText className="w-10 h-10 mb-4" style={{ color: 'var(--text-muted)' }} />
-                    <p className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>Aún no hay opiniones</p>
-                    <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Sé el primero en alentar a {player.name}.</p>
+                    <p className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>Aún no hay comentarios</p>
+                    <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Sé el primero en comentar sobre {player.name}.</p>
                   </div>
                 )}
               </div>

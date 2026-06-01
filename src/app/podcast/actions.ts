@@ -86,18 +86,35 @@ export async function addPodcastEpisode(formData: FormData) {
 
     let thumbnailUrl = '/cartoons/avatar-1.png' // default fallback
 
-    // Process file upload if provided
-    if (thumbnailFile && thumbnailFile.size > 0 && thumbnailFile.name !== 'undefined') {
-      const uploadDir = path.join(process.cwd(), 'uploads', 'podcast-thumbs')
+    // Process file upload if provided and valid
+    const hasUpload = thumbnailFile && 
+                      typeof thumbnailFile === 'object' && 
+                      'size' in thumbnailFile && 
+                      thumbnailFile.size > 0 && 
+                      'name' in (thumbnailFile as any) &&
+                      (thumbnailFile as any).name !== '' &&
+                      (thumbnailFile as any).name !== 'undefined';
+
+    if (hasUpload) {
+      const fileToUpload = thumbnailFile as File
+      
+      // Format current date as DDMMYY (e.g. 270526)
+      const date = new Date()
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = String(date.getFullYear()).slice(-2)
+      const folderName = `${day}${month}${year}`
+
+      const uploadDir = path.join(process.cwd(), 'uploads', 'podcast-thumbs', folderName)
       await mkdir(uploadDir, { recursive: true })
 
-      const buffer = Buffer.from(await thumbnailFile.arrayBuffer())
-      const ext = path.extname(thumbnailFile.name) || '.png'
+      const buffer = Buffer.from(await fileToUpload.arrayBuffer())
+      const ext = path.extname(fileToUpload.name) || '.png'
       const filename = `ep-${episodeNumber}-${Date.now()}${ext}`
       const filepath = path.join(uploadDir, filename)
 
       await writeFile(filepath, buffer)
-      thumbnailUrl = `/api/uploads/podcast-thumbs/${filename}`
+      thumbnailUrl = `/api/uploads/podcast-thumbs/${folderName}/${filename}`
     } else {
       const rawThumbnailUrl = formData.get('thumbnailUrl') as string
       if (rawThumbnailUrl && rawThumbnailUrl.trim() !== '') {

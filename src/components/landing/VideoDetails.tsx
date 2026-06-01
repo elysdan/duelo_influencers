@@ -106,12 +106,9 @@ export default function VideoDetails() {
               </div>
               <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#06070b]" title="En Vivo" />
             </div>
-            
+
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <span className="font-semibold text-sm sm:text-base hover:text-[var(--yellow)] transition-colors">
-                  Micasino TV Show
-                </span>
                 <span className="flex items-center justify-center w-3.5 h-3.5 rounded-full bg-[var(--yellow)] text-black text-[9px] font-black" title="Canal Oficial">
                   ✓
                 </span>
@@ -124,11 +121,10 @@ export default function VideoDetails() {
           <div className="flex items-center gap-2 ml-4">
             <button
               onClick={handleSubscribe}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
-                isSubscribed 
-                  ? 'bg-white/10 text-white hover:bg-white/15' 
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${isSubscribed
+                  ? 'bg-white/10 text-white hover:bg-white/15'
                   : 'bg-white text-black hover:bg-white/90 shadow-[0_0_10px_rgba(255,255,255,0.15)]'
-              }`}
+                }`}
             >
               {isSubscribed ? 'Suscrito' : 'Suscribirse'}
             </button>
@@ -155,9 +151,8 @@ export default function VideoDetails() {
           <div className="flex items-center rounded-full bg-white/10 border border-white/5 p-0.5">
             <button
               onClick={handleLike}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-l-full text-xs font-semibold hover:bg-white/5 transition-all cursor-pointer ${
-                hasLiked ? 'text-[var(--yellow)] bg-white/5' : 'text-white'
-              }`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-l-full text-xs font-semibold hover:bg-white/5 transition-all cursor-pointer ${hasLiked ? 'text-[var(--yellow)] bg-white/5' : 'text-white'
+                }`}
             >
               <ThumbsUp className={`w-3.5 h-3.5 ${hasLiked ? 'fill-current' : ''}`} />
               <span>{formatNumber(likesCount)}</span>
@@ -165,9 +160,8 @@ export default function VideoDetails() {
             <div className="w-[1px] h-4 bg-white/20" />
             <button
               onClick={handleDislike}
-              className={`px-3 py-1.5 rounded-r-full text-xs hover:bg-white/5 transition-all cursor-pointer ${
-                hasDisliked ? 'text-red-400 bg-white/5' : 'text-white'
-              }`}
+              className={`px-3 py-1.5 rounded-r-full text-xs hover:bg-white/5 transition-all cursor-pointer ${hasDisliked ? 'text-red-400 bg-white/5' : 'text-white'
+                }`}
               aria-label="No me gusta"
             >
               <ThumbsDown className={`w-3.5 h-3.5 ${hasDisliked ? 'fill-current' : ''}`} />
@@ -190,7 +184,7 @@ export default function VideoDetails() {
       {/* Description Box */}
       <div className="rounded-xl bg-white/5 border border-white/5 p-3.5 sm:p-4 text-xs sm:text-sm text-gray-300 leading-relaxed relative overflow-hidden transition-all duration-300">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-[var(--yellow)]" />
-        
+
         {/* Stats line */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-bold text-white mb-2">
           <span>1,240,512 vistas</span>
@@ -209,9 +203,9 @@ export default function VideoDetails() {
             ¡Bienvenidos al espectacular Gran Estreno de <strong>Micasino TV Show</strong>! 🎰✨
             Disfruta del emocionante micro duelo de influencers en vivo que pondrá a prueba su suerte, estrategia e ingenio en los juegos más picantes del casino.
           </p>
-          
+
           {showDescription && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               transition={{ duration: 0.2 }}

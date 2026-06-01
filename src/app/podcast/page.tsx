@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SmartPlayer from '@/components/podcast/SmartPlayer'
 import AdminPanel from '@/components/podcast/AdminPanel'
+import PodcastLibrary from '@/components/podcast/PodcastLibrary'
 import { desc, eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { Mic, Sparkles, Play, Calendar, Video, Clock } from 'lucide-react'
@@ -92,59 +93,8 @@ export default async function PodcastPage({ searchParams }: PageProps) {
                 <SmartPlayer episode={activeEpisode} />
               </div>
 
-              {/* Grid of Other Episodes */}
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-3 border-b border-white/5 pb-3">
-                  <Sparkles className="w-5 h-5 text-yellow-500" />
-                  <h2 className="text-base font-black uppercase tracking-wider text-white">Episodios Publicados</h2>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                  {episodes.map((ep) => {
-                    const isActive = ep.id === activeEpisode.id
-                    return (
-                      <div
-                        key={ep.id}
-                        className={`glass-card rounded-2xl overflow-hidden flex flex-col hover:bg-white/[0.04] transition-all border group shadow-lg ${isActive ? 'border-yellow-500 shadow-[0_0_20px_rgba(245,197,24,0.15)] bg-yellow-500/[0.01]' : 'border-white/5'}`}
-                      >
-                        {/* Thumbnail image with overlay and play icon */}
-                        <div className="relative aspect-video w-full bg-black/60 overflow-hidden">
-                          <img
-                            src={ep.thumbnailUrl}
-                            alt={ep.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className={`absolute inset-0 bg-black/40 flex items-center justify-center group-hover:opacity-100 transition-opacity ${isActive ? 'opacity-100 bg-yellow-500/10' : 'opacity-0'}`}>
-                            <div className={`w-12 h-12 rounded-full bg-black/80 flex items-center justify-center text-white border border-white/10 ${isActive ? 'bg-yellow-500 text-black border-transparent scale-105' : 'group-hover:scale-105 group-hover:bg-yellow-500 group-hover:text-black group-hover:border-transparent'} transition-all`}>
-                              <Play className="w-5 h-5 fill-current ml-0.5" />
-                            </div>
-                          </div>
-                          <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-[8px] font-black uppercase tracking-wider text-gray-300 font-mono">
-                            EP {ep.episodeNumber}
-                          </span>
-                        </div>
-
-                        {/* Card Info */}
-                        <div className="p-5 flex flex-col gap-2 flex-grow">
-                          <h3 className={`text-sm sm:text-base font-black leading-snug line-clamp-2 transition-colors ${isActive ? 'text-yellow-500' : 'text-gray-100 group-hover:text-yellow-500'}`}>
-                            {ep.title}
-                          </h3>
-                          <p className="text-xs text-gray-400 line-clamp-3 leading-relaxed mt-1 flex-grow">
-                            {ep.description}
-                          </p>
-                          
-                          <Link
-                            href={`/podcast?ep=${ep.id}`}
-                            className={`w-full text-center py-2.5 rounded-xl text-xs font-black uppercase tracking-widest mt-4 transition-all ${isActive ? 'bg-yellow-500 text-black shadow-[0_4px_10px_rgba(245,197,24,0.2)]' : 'bg-white/5 text-gray-300 hover:bg-yellow-500 hover:text-black hover:shadow-[0_4px_10px_rgba(245,197,24,0.2)] border border-white/5 hover:border-transparent'}`}
-                          >
-                            {isActive ? 'Reproduciendo Ahora' : 'Ver Video'}
-                          </Link>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
+              {/* Podcast Date-Based Folder Library */}
+              <PodcastLibrary episodes={episodes} activeEpisodeId={activeEpisode.id} />
 
             </div>
           ) : (

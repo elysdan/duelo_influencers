@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Play, Sparkles, AlertCircle, RefreshCw, Layers, ShieldCheck, HelpCircle } from 'lucide-react'
+import { Play, Sparkles, AlertCircle, RefreshCw, Layers, ShieldCheck, HelpCircle, ExternalLink } from 'lucide-react'
 
 interface Episode {
   id: string
@@ -18,7 +18,7 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
   const [provider, setProvider] = useState<'youtube' | 'vimeo' | 'dailymotion' | 'failed'>('youtube')
   const [isTransitioning, setIsTransitioning] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  
+
   // Keep track of routed path for the live monitor card
   const [routingHistory, setRoutingHistory] = useState<Array<{ platform: string; status: 'pending' | 'success' | 'failed' | 'skipped'; timestamp: string }>>([])
 
@@ -31,7 +31,21 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
 
     // Clean up previous loads
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    ytPlayerRef.current = null
+
+    // Destroy active YT Player to prevent duplicate overlays & background audio
+    if (ytPlayerRef.current) {
+      try {
+        ytPlayerRef.current.destroy()
+      } catch (e) {
+        console.error('Error cleaning up YouTube player:', e)
+      }
+      ytPlayerRef.current = null
+    }
+    const container = document.getElementById('yt-player-container')
+    if (container) {
+      container.innerHTML = ''
+    }
+
     setErrorMessage(null)
     setIsTransitioning(true)
 
@@ -85,6 +99,23 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
 
     if (from === 'youtube') {
       updateHistoryStatus('YouTube (CDN Node 1)', 'failed')
+
+      // Destroy YouTube player instance to stop audio playback in background
+      if (ytPlayerRef.current) {
+        try {
+          ytPlayerRef.current.destroy()
+        } catch (e) {
+          console.error('Error destroying YouTube player:', e)
+        }
+        ytPlayerRef.current = null
+      }
+
+      // Wipe the player element completely from DOM
+      const container = document.getElementById('yt-player-container')
+      if (container) {
+        container.innerHTML = ''
+      }
+
       if (episode.vimeoId) {
         setTimeout(() => {
           setProvider('vimeo')
@@ -200,12 +231,12 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
     <div className="flex flex-col gap-6">
       {/* Player Widescreen Wrapper */}
       <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-white/5 bg-black shadow-[0_15px_40px_rgba(0,0,0,0.5)]">
-        
+
         {/* Loading overlay screen */}
         {isTransitioning && (
           <div className="absolute inset-0 bg-[#06070b] z-30 flex flex-col items-center justify-center gap-4 transition-all duration-300">
             <div className="relative flex items-center justify-center w-20 h-20 rounded-full border border-yellow-500/20 bg-black/40 animate-pulse">
-              <img src="/logo.png" alt="Loading" className="w-10 h-10 object-contain animate-spin duration-[3000ms]" />
+              <img src="/logo2.png" alt="Loading" className="w-10 h-10 object-contain animate-spin duration-[3000ms]" />
               <div className="absolute inset-0 rounded-full border-t-2 border-yellow-500 animate-spin" />
             </div>
             <div className="text-center">
@@ -225,7 +256,7 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
               <h3 className="text-lg font-bold text-white uppercase tracking-wider">Video no disponible</h3>
               <p className="text-sm text-gray-400 mt-1.5 leading-relaxed">{errorMessage}</p>
             </div>
-            <button 
+            <button
               onClick={() => {
                 setIsTransitioning(true)
                 setProvider('youtube')
@@ -239,8 +270,8 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
         )}
 
         {/* 1. YouTube Iframe Player Container */}
-        <div 
-          id="yt-player-container" 
+        <div
+          id="yt-player-container"
           className={`w-full h-full ${provider === 'youtube' ? 'block' : 'hidden'}`}
         />
 
@@ -271,9 +302,9 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
 
       {/* Under-Player Metadata & CDN Smart Router Monitor */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Episode Info */}
-        <div className="lg:col-span-2 flex flex-col gap-2">
+        <div className="lg:col-span-2 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
               Episodio {episode.episodeNumber}
@@ -288,12 +319,31 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
           <p className="text-sm text-gray-400 leading-relaxed text-justify mt-1">
             {episode.description}
           </p>
+
+          {/* External Traffic Button */}
+          {provider !== 'failed' && (
+            <a
+              href={
+                provider === 'youtube'
+                  ? `https://www.youtube.com/watch?v=${episode.youtubeId}`
+                  : provider === 'vimeo'
+                    ? `https://vimeo.com/${episode.vimeoId}`
+                    : `https://www.dailymotion.com/video/${episode.dailymotionId}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 w-full sm:w-max px-5 py-3 bg-yellow-500 hover:bg-yellow-600 text-black text-xs font-black uppercase tracking-widest rounded-xl shadow-[0_4px_12px_rgba(245,197,24,0.2)] hover:shadow-[0_4px_20px_rgba(245,197,24,0.35)] transition-all flex items-center justify-center gap-2 group cursor-pointer"
+            >
+              <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              Ver en {provider === 'youtube' ? 'YouTube' : provider === 'vimeo' ? 'Vimeo' : 'DailyMotion'}
+            </a>
+          )}
         </div>
 
         {/* Live Router Monitor */}
         <div className="glass-card rounded-2xl p-4 border border-white/5 bg-[#0b0e14]/50 flex flex-col gap-3 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none" />
-          
+
           <div className="flex items-center justify-between border-b border-white/5 pb-2">
             <div className="flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-yellow-500 animate-pulse" />
@@ -343,7 +393,7 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
             <span className="text-[9px] text-gray-500 flex items-center gap-1">
               <HelpCircle className="w-3 h-3" /> ¿Problemas con la reproducción?
             </span>
-            <button 
+            <button
               onClick={() => {
                 if (provider === 'youtube') triggerFallback('youtube')
                 else if (provider === 'vimeo') triggerFallback('vimeo')

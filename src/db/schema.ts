@@ -263,3 +263,20 @@ export const podcastEpisodes = pgTable('podcast_episodes', {
   dailymotionId: text('dailymotion_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
+
+// ─── Blog Posts ───────────────────────────────────────────────────────────────
+
+export const blogPosts = pgTable('blog_posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  imageUrl: text('image_url').notNull(),
+  author: text('author').default('Admin').notNull(),
+  publishedAt: timestamp('published_at').defaultNow().notNull(),
+  caption: text('caption'),
+  content: text('content').notNull(),
+  additionalImages: jsonb('additional_images').default([]).notNull(),
+  category: text('category').default('ENTREVISTA').notNull(),
+  readTime: text('read_time').default('3 min').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})

@@ -9,22 +9,17 @@ export default function Footer() {
         background: 'var(--bg-card)',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="relative w-8 h-8 flex items-center justify-center">
-                <img 
-                  src="/logo.png" 
-                  alt="Micasino TV Show Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="font-display text-xl tracking-widest uppercase" style={{ color: 'var(--text-primary)' }}>
-                Micasino <span style={{ color: 'var(--yellow)' }}>TV Show</span>
-              </span>
-            </div>
+          <div className="flex flex-col gap-4 text-left">
+            <Link href="/" className="flex items-center w-max transition-transform hover:scale-[1.02] active:scale-[0.98]" aria-label="Micasino TV Show - Inicio">
+              <img 
+                src="/logo2.png" 
+                alt="Micasino TV Show Logo" 
+                className="h-10 w-auto object-contain block"
+              />
+            </Link>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               La plataforma oficial de los micro duelos de influencers.
             </p>
@@ -37,9 +32,11 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               {[
+                { href: '/', label: 'Inicio' },
+                { href: '/podcast', label: 'Episodios' },
+                { href: '/blog', label: 'Blog' },
+                { href: '/clasificacion', label: 'Clasificación' },
                 { href: '/jugadores', label: 'Influencers' },
-                { href: '/podcast', label: 'Podcast' },
-                { href: '/comunidad', label: 'Comunidad' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

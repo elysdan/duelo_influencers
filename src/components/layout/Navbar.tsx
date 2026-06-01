@@ -8,9 +8,11 @@ import { cn } from '@/lib/utils'
 import { signOutAction } from '@/app/actions'
 
 const NAV_LINKS = [
+  { href: '/', label: 'Inicio' },
+  { href: '/podcast', label: 'Episodios' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/clasificacion', label: 'Clasificación' },
   { href: '/jugadores', label: 'Influencers' },
-  { href: '/podcast', label: 'Podcast' },
-  { href: '/comunidad', label: 'Comunidad' },
 ]
 
 export default function Navbar({ userName }: { userName?: string | null }) {
@@ -27,23 +29,15 @@ export default function Navbar({ userName }: { userName?: string | null }) {
           WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group" aria-label="Micasino TV Show - Inicio">
-              <div className="relative w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
-                <img 
-                  src="/logo.png" 
-                  alt="Micasino TV Show Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span
-                className="font-display text-xl tracking-widest uppercase"
-                style={{ color: 'var(--text-primary)' }}
-              >
-                Micasino <span style={{ color: 'var(--yellow)' }}>TV Show</span>
-              </span>
+            <Link href="/" className="flex items-center transition-transform hover:scale-[1.03] active:scale-[0.98] py-1 shrink-0" aria-label="Micasino TV Show - Inicio">
+              <img
+                src="/logo2.png"
+                alt="Micasino TV Show Logo"
+                className="h-10 md:h-12 w-auto object-contain block"
+              />
             </Link>
 
             {/* Desktop nav */}
