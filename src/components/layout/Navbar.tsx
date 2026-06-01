@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/blog', label: 'Blog' },
   { href: '/clasificacion', label: 'Clasificación' },
   { href: '/jugadores', label: 'Influencers' },
+  { href: '/juegos', label: 'Juegos' },
 ]
 
 export default function Navbar({ userName }: { userName?: string | null }) {

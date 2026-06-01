@@ -37,6 +37,7 @@ export default function Footer() {
                 { href: '/blog', label: 'Blog' },
                 { href: '/clasificacion', label: 'Clasificación' },
                 { href: '/jugadores', label: 'Influencers' },
+                { href: '/juegos', label: 'Juegos' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

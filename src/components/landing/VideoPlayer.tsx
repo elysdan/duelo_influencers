@@ -114,29 +114,30 @@ export default function VideoPlayer({ src }: VideoPlayerProps) {
       {!isPlaying && (
         <div
           onClick={togglePlay}
-          className="absolute inset-0 z-10 flex flex-col justify-center px-6 sm:px-12 md:px-16 text-left cursor-pointer transition-all duration-500 bg-cover bg-center select-none"
-          style={{ backgroundImage: "linear-gradient(to right, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%), url('/esports_hero_bg.png')" }}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 sm:p-12 md:p-16 text-center cursor-pointer transition-all duration-500 bg-cover bg-center select-none"
+          style={{ backgroundImage: "linear-gradient(to bottom, rgba(7, 9, 15, 0.4) 0%, rgba(7, 9, 15, 0.85) 100%), url('/esports_hero_bg.png')" }}
         >
+          <div className="flex flex-col items-center max-w-3xl transform hover:scale-[1.01] transition-transform duration-500">
+            {/* Composite Game Show Logo (logo2.png + logo_etiqueta.png stacked and overlapping) */}
+            <div className="relative flex flex-col items-center select-none pointer-events-none mb-4">
+              <img
+                src="/logo2.png"
+                alt="Micasino TV Show"
+                className="w-[80%] sm:w-[70%] md:w-[60%] max-w-[1280px] h-auto object-contain block drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                loading="eager"
+              />
+              <img
+                src="/logo_etiqueta.png"
+                alt="Duelo de Influencers"
+                className="w-[70%] sm:w-[60%] md:w-[50%] max-w-[310px] h-auto object-contain block -mt-6 sm:-mt-10 md:-mt-12 relative z-10 translate-x-[95px] translate-y-[25px] drop-shadow-[0_8px_15px_rgba(0,0,0,0.4)]"
+                loading="eager"
+              />
+            </div>
 
-          <div className="flex flex-col gap-4 max-w-xl">
-            <h1 className="font-display font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-wide uppercase leading-none">
-              1er Torneo <br />
-              <span className="text-[var(--yellow)]">Latinoamericano</span> <br />
-              Duelo de Influencers
-            </h1>
-            <p className="text-[10px] sm:text-xs md:text-sm text-gray-300 leading-relaxed max-w-lg mt-1">
+            {/* Centered Symmetrical Arena Paragraph */}
+            <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed max-w-2xl select-none font-medium px-4 sm:px-8">
               La arena está lista. Los mayores creadores de contenido de la región se enfrentan en la batalla definitiva. Únete a la comunidad, apoya a tus favoritos y vive la adrenalina de los esports en horario estelar.
             </p>
-            <div className="flex items-center gap-4 mt-2">
-              <button className="px-5 py-3 bg-[var(--yellow)] hover:bg-yellow-500 text-black text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_15px_rgba(245,197,24,0.35)] hover:scale-[1.02] flex items-center gap-2 cursor-pointer">
-                Únete a la Arena <span className="text-sm">→</span>
-              </button>
-
-              {/* Play icon inside the overlay */}
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/15 hover:bg-white/10 text-white transition-all">
-                <Play className="w-5 h-5 fill-current ml-0.5" />
-              </div>
-            </div>
           </div>
         </div>
       )}

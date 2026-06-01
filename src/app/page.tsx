@@ -9,11 +9,11 @@ import { desc, asc } from 'drizzle-orm'
 export default async function HomePage() {
   const session = await auth()
 
-  // Obtener últimas 6 noticias, top 6 jugadores y los 3 posts de blog más recientes
+  // Obtener últimas 6 noticias, top 6 jugadores y los 2 posts de blog más recientes
   const [latestNews, topPlayers, latestBlogPosts] = await Promise.all([
     db.select().from(newsItems).orderBy(desc(newsItems.publishedAt)).limit(6),
     db.select().from(players).orderBy(desc(players.hypeCount), asc(players.name)).limit(6),
-    db.select().from(blogPosts).orderBy(desc(blogPosts.publishedAt)).limit(3),
+    db.select().from(blogPosts).orderBy(desc(blogPosts.publishedAt)).limit(2),
   ])
 
   return (
