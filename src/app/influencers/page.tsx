@@ -41,7 +41,7 @@ export default async function JugadoresPage() {
               return (
                 <Link
                   key={player.id}
-                  href={`/jugadores/${player.id}`}
+                  href={`/influencers/${player.id}`}
                   className="group flex flex-col bg-[#0b0e14]/40 border border-white/5 rounded-2xl p-4 sm:p-5 hover:bg-[#0b0e14]/70 hover:border-yellow-500/20 hover:shadow-[0_0_30px_rgba(245,197,24,0.12)] transition-all duration-300 cursor-pointer"
                 >
 

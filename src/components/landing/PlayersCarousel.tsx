@@ -24,7 +24,7 @@ const POSITION_COLORS: Record<string, string> = {
 function PlayerCard({ player }: { player: Player }) {
   return (
     <Link
-      href={`/jugadores/${player.id}`}
+      href={`/influencers/${player.id}`}
       className="glass-card group flex flex-col items-center text-center p-6 transition-all hover:-translate-y-2 hover:border-opacity-50 rounded-2xl relative overflow-hidden"
       style={{ minWidth: '180px' }}
       aria-label={`Ver ficha de ${player.name}`}
@@ -104,7 +104,7 @@ export default function PlayersCarousel({ players }: { players: Player[] }) {
             </h2>
           </div>
           <Link
-            href="/jugadores"
+            href="/influencers"
             className="hidden sm:flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity"
             style={{ color: 'var(--blue-light)' }}
           >

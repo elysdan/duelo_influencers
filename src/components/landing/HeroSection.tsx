@@ -154,7 +154,7 @@ export default function HeroSection() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
           <a
-            href="/jugadores"
+            href="/influencers"
             className="px-8 py-4 rounded-xl font-semibold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
             style={{ background: 'var(--yellow)', color: '#000' }}
           >

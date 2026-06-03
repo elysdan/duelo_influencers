@@ -12,7 +12,7 @@ export default function AdminBlogConsole({
   isRealAdmin: boolean 
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [isSimulated, setIsSimulated] = useState(false)
+
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
   
@@ -75,7 +75,7 @@ export default function AdminBlogConsole({
     const formData = new FormData(e.currentTarget)
     
     // Add simulation flag
-    formData.append('isSimulatedAdmin', isSimulated ? 'true' : 'false')
+    formData.append('isSimulatedAdmin', 'false')
 
     startTransition(async () => {
       setMessage(null)
@@ -91,44 +91,12 @@ export default function AdminBlogConsole({
     })
   }
 
-  const canAccess = isRealAdmin || (isSimulated && isDev)
+  if (!isRealAdmin) {
+    return null
+  }
 
   return (
     <div className="flex flex-col gap-4 mb-8">
-      {/* Dev Simulation Bar */}
-      {isDev && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 relative overflow-hidden backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <Terminal className="w-5 h-5 text-yellow-500 animate-pulse" />
-            <div className="text-left">
-              <p className="text-xs font-black uppercase tracking-wider text-yellow-500 font-mono">Consola del Blog (Admin)</p>
-              <p className="text-[10px] text-gray-400">Agrega artículos personalizados con autor y subidas de múltiples imágenes en tu disco local.</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={handleSeed}
-              disabled={isPending}
-              className="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5 uppercase tracking-wider"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-500 animate-spin duration-[4000ms]" /> Precargar Artículos
-            </button>
-
-            <button
-              onClick={() => {
-                setIsSimulated(!isSimulated)
-                setMessage(null)
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 uppercase tracking-wider cursor-pointer border ${isSimulated ? 'bg-yellow-500 text-black border-transparent shadow-[0_0_15px_rgba(245,197,24,0.3)]' : 'bg-black/40 text-gray-400 border-white/10 hover:text-white hover:bg-black/60'}`}
-            >
-              <UserCheck className="w-4 h-4" />
-              {isSimulated ? 'Modo Admin Activo' : 'Simular Modo Admin'}
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Accordion Console */}
       <div className="glass-card rounded-3xl border border-white/5 overflow-hidden shadow-2xl">
         <button
@@ -146,196 +114,186 @@ export default function AdminBlogConsole({
 
         {isOpen && (
           <div className="p-6 sm:p-8 bg-[#0b0e14]/30">
-            {!canAccess ? (
-              <div className="flex flex-col items-center justify-center p-8 text-center gap-3">
-                <AlertCircle className="w-10 h-10 text-red-400 animate-bounce" />
-                <div>
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Acceso Restringido</h4>
-                  <p className="text-xs text-gray-400 max-w-sm mx-auto mt-1">Este panel es exclusivo para el rol ADMIN. Activa el botón de simulación superior para testear la funcionalidad en desarrollo.</p>
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              
+              {message && (
+                <div className={`p-4 rounded-xl flex items-center gap-3 border ${message.type === 'success' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                  {message.type === 'success' ? <CheckCircle className="w-5 h-5 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 flex-shrink-0" />}
+                  <p className="text-xs font-bold font-mono">{message.text}</p>
                 </div>
-              </div>
-            ) : (
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              )}
+
+              {/* Form fields */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                {message && (
-                  <div className={`p-4 rounded-xl flex items-center gap-3 border ${message.type === 'success' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
-                    {message.type === 'success' ? <CheckCircle className="w-5 h-5 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 flex-shrink-0" />}
-                    <p className="text-xs font-bold font-mono">{message.text}</p>
-                  </div>
-                )}
-
-                {/* Form fields */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  
-                  {/* Title */}
-                  <div className="md:col-span-2 flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Título del Artículo</label>
-                    <input
-                      name="title"
-                      type="text"
-                      required
-                      placeholder="Ej: Hablando con 'El Rey': Sus secretos revelados"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-                    />
-                  </div>
-
-                  {/* Author */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Autor</label>
-                    <input
-                      name="author"
-                      type="text"
-                      placeholder="Ej: Staff Técnico Micasino"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-                    />
-                  </div>
-
-                </div>
-
-                {/* Category and ReadTime row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Category */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Categoría / Etiqueta</label>
-                    <input
-                      name="category"
-                      type="text"
-                      placeholder="Ej: ENTREVISTA, EPISODIO 03, COMUNIDAD"
-                      defaultValue="ENTREVISTA"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-                    />
-                  </div>
-
-                  {/* Read Time */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Tiempo de Lectura</label>
-                    <input
-                      name="readTime"
-                      type="text"
-                      placeholder="Ej: 3 min, 5 min"
-                      defaultValue="3 min"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Caption / Subtitle */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Subtítulo / Copete (Caption)</label>
+                {/* Title */}
+                <div className="md:col-span-2 flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Título del Artículo</label>
                   <input
-                    name="caption"
+                    name="title"
                     type="text"
-                    placeholder="Resumen corto o bajada de título que aparece abajo de la imagen principal..."
+                    required
+                    placeholder="Ej: Hablando con 'El Rey': Sus secretos revelados"
                     className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
                   />
                 </div>
 
-                {/* Content Textarea */}
+                {/* Author */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Texto Completo del Artículo</label>
-                  <textarea
-                    name="content"
-                    required
-                    rows={6}
-                    placeholder="Escribe el cuerpo del artículo. Puedes usar saltos de línea para separar párrafos..."
-                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 resize-none transition-all leading-relaxed"
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Autor</label>
+                  <input
+                    name="author"
+                    type="text"
+                    placeholder="Ej: Staff Técnico Micasino"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
                   />
                 </div>
 
-                {/* Image Uploads */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
-                  
-                  {/* Main Image Selector */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Imagen Principal (Fondo)</label>
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => mainInputRef.current?.click()}
-                        className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-2 cursor-pointer"
-                      >
-                        <Upload className="w-3.5 h-3.5 text-yellow-500" />
-                        Cargar Imagen Principal
-                      </button>
-                      <input
-                        ref={mainInputRef}
-                        type="file"
-                        name="mainImageFile"
-                        accept="image/*"
-                        onChange={handleMainFileChange}
-                        className="hidden"
-                      />
-                      {mainPreview && <span className="text-[10px] text-green-400 font-bold font-mono">¡Cargada!</span>}
-                    </div>
-                    {mainPreview && (
-                      <div className="relative w-36 aspect-video rounded-xl overflow-hidden border border-white/10 mt-2">
-                        <img src={mainPreview} alt="Main preview" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                  </div>
+              </div>
 
-                  {/* Additional Images Selector */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Imágenes Adicionales (Galería)</label>
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => additionalInputRef.current?.click()}
-                        className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-2 cursor-pointer"
-                      >
-                        <ImageIcon className="w-3.5 h-3.5 text-yellow-500" />
-                        Subir Varias Imágenes
-                      </button>
-                      <input
-                        ref={additionalInputRef}
-                        type="file"
-                        name="additionalImageFiles"
-                        accept="image/*"
-                        multiple
-                        onChange={handleAdditionalFilesChange}
-                        className="hidden"
-                      />
-                      {additionalPreviews.length > 0 && (
-                        <span className="text-[10px] text-green-400 font-bold font-mono">
-                          ¡{additionalPreviews.length} imágenes!
-                        </span>
-                      )}
+              {/* Category and ReadTime row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Category */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Categoría / Etiqueta</label>
+                  <input
+                    name="category"
+                    type="text"
+                    placeholder="Ej: ENTREVISTA, EPISODIO 03, COMUNIDAD"
+                    defaultValue="ENTREVISTA"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  />
+                </div>
+
+                {/* Read Time */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Tiempo de Lectura</label>
+                  <input
+                    name="readTime"
+                    type="text"
+                    placeholder="Ej: 3 min, 5 min"
+                    defaultValue="3 min"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Caption / Subtitle */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-black uppercase tracking-wider text-gray-400">Subtítulo / Copete (Caption)</label>
+                <input
+                  name="caption"
+                  type="text"
+                  placeholder="Resumen corto o bajada de título que aparece abajo de la imagen principal..."
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                />
+              </div>
+
+              {/* Content Textarea */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-black uppercase tracking-wider text-gray-400">Texto Completo del Artículo</label>
+                <textarea
+                  name="content"
+                  required
+                  rows={6}
+                  placeholder="Escribe el cuerpo del artículo. Puedes usar saltos de línea para separar párrafos..."
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 resize-none transition-all leading-relaxed"
+                />
+              </div>
+
+              {/* Image Uploads */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
+                
+                {/* Main Image Selector */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Imagen Principal (Fondo)</label>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => mainInputRef.current?.click()}
+                      className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-2 cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-yellow-500" />
+                      Cargar Imagen Principal
+                    </button>
+                    <input
+                      ref={mainInputRef}
+                      type="file"
+                      name="mainImageFile"
+                      accept="image/*"
+                      onChange={handleMainFileChange}
+                      className="hidden"
+                    />
+                    {mainPreview && <span className="text-[10px] text-green-400 font-bold font-mono">¡Cargada!</span>}
+                  </div>
+                  {mainPreview && (
+                    <div className="relative w-36 aspect-video rounded-xl overflow-hidden border border-white/10 mt-2">
+                      <img src={mainPreview} alt="Main preview" className="w-full h-full object-cover" />
                     </div>
+                  )}
+                </div>
+
+                {/* Additional Images Selector */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Imágenes Adicionales (Galería)</label>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => additionalInputRef.current?.click()}
+                      className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-2 cursor-pointer"
+                    >
+                      <ImageIcon className="w-3.5 h-3.5 text-yellow-500" />
+                      Subir Varias Imágenes
+                    </button>
+                    <input
+                      ref={additionalInputRef}
+                      type="file"
+                      name="additionalImageFiles"
+                      accept="image/*"
+                      multiple
+                      onChange={handleAdditionalFilesChange}
+                      className="hidden"
+                    />
                     {additionalPreviews.length > 0 && (
-                      <div className="flex gap-2 flex-wrap mt-2">
-                        {additionalPreviews.map((prev, idx) => (
-                          <div key={idx} className="relative w-14 h-10 rounded-lg overflow-hidden border border-white/10">
-                            <img src={prev} alt="Additional preview" className="w-full h-full object-cover" />
-                          </div>
-                        ))}
-                      </div>
+                      <span className="text-[10px] text-green-400 font-bold font-mono">
+                        ¡{additionalPreviews.length} imágenes!
+                      </span>
                     )}
                   </div>
-
+                  {additionalPreviews.length > 0 && (
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      {additionalPreviews.map((prev, idx) => (
+                        <div key={idx} className="relative w-14 h-10 rounded-lg overflow-hidden border border-white/10">
+                          <img src={prev} alt="Additional preview" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* Submit button */}
-                <div className="pt-4 border-t border-white/5 flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isPending}
-                    className="w-full sm:w-auto px-8 py-3.5 bg-yellow-500 text-black font-black uppercase tracking-wider text-xs rounded-xl shadow-[0_4px_15px_rgba(245,197,24,0.2)] hover:shadow-[0_4px_25px_rgba(245,197,24,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    {isPending ? (
-                      <>
-                        <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                        Publicando Artículo...
-                      </>
-                    ) : (
-                      <>
-                        <PlusCircle className="w-4 h-4" /> Publicar Artículo en el Blog
-                      </>
-                    )}
-                  </button>
-                </div>
+              </div>
 
-              </form>
-            )}
+              {/* Submit button */}
+              <div className="pt-4 border-t border-white/5 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full sm:w-auto px-8 py-3.5 bg-yellow-500 text-black font-black uppercase tracking-wider text-xs rounded-xl shadow-[0_4px_15px_rgba(245,197,24,0.2)] hover:shadow-[0_4px_25px_rgba(245,197,24,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {isPending ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      Publicando Artículo...
+                    </>
+                  ) : (
+                    <>
+                      <PlusCircle className="w-4 h-4" /> Publicar Artículo en el Blog
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </form>
           </div>
         )}
       </div>

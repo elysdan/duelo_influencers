@@ -249,7 +249,7 @@ export default function PodcastLibrary({ episodes, activeEpisodeId }: PodcastLib
                       </p>
                       
                       <Link
-                        href={`/podcast?ep=${ep.id}`}
+                        href={`/episodios?ep=${ep.id}`}
                         className={`w-full text-center py-2.5 rounded-xl text-xs font-black uppercase tracking-widest mt-4 transition-all duration-300 flex items-center justify-center gap-1.5 ${
                           isActive 
                             ? 'bg-yellow-500 text-black shadow-[0_4px_10px_rgba(245,197,24,0.25)]' 

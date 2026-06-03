@@ -6,13 +6,12 @@ import { useState } from 'react'
 import { Menu, X, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOutAction } from '@/app/actions'
-
 const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
-  { href: '/podcast', label: 'Episodios' },
+  { href: '/episodios', label: 'Episodios' },
   { href: '/blog', label: 'Blog' },
   { href: '/clasificacion', label: 'Clasificación' },
-  { href: '/jugadores', label: 'Influencers' },
+  { href: '/influencers', label: 'Influencers' },
   { href: '/juegos', label: 'Juegos' },
 ]
 

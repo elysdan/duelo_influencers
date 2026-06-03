@@ -48,7 +48,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       playerId: id,
     })
 
-    revalidatePath(`/jugadores/${id}`)
+    revalidatePath(`/influencers/${id}`)
   }  
   
   // Fetch Player and Hype Status
@@ -127,7 +127,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
         <div className="max-w-4xl mx-auto relative z-10">
           
           <Link 
-            href="/jugadores" 
+            href="/influencers" 
             className="inline-flex items-center gap-2 text-sm mb-8 transition-colors hover:text-white"
             style={{ color: 'var(--text-muted)' }}
           >

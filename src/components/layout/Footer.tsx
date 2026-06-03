@@ -33,10 +33,10 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { href: '/', label: 'Inicio' },
-                { href: '/podcast', label: 'Episodios' },
+                { href: '/episodios', label: 'Episodios' },
                 { href: '/blog', label: 'Blog' },
                 { href: '/clasificacion', label: 'Clasificación' },
-                { href: '/jugadores', label: 'Influencers' },
+                { href: '/influencers', label: 'Influencers' },
                 { href: '/juegos', label: 'Juegos' },
               ].map((link) => (
                 <li key={link.href}>

@@ -164,7 +164,7 @@ export default function SidebarRecommendations({ news, players }: SidebarRecomme
               </div>
 
               <Link
-                href={`/jugadores/${player.id}`}
+                href={`/influencers/${player.id}`}
                 className="px-3 py-1 rounded-full bg-white/10 hover:bg-[var(--yellow)] hover:text-black font-bold text-[9px] text-gray-300 transition-all cursor-pointer shrink-0 flex items-center gap-1"
               >
                 <UserCheck className="w-2.5 h-2.5" />
@@ -173,7 +173,7 @@ export default function SidebarRecommendations({ news, players }: SidebarRecomme
             </div>
           ))}
           <Link
-            href="/jugadores"
+            href="/influencers"
             className="text-[11px] font-bold text-center text-gray-400 hover:text-[var(--yellow)] transition-colors mt-2 block border-t border-white/5 pt-2"
           >
             Ver Todos los Influencers ➔

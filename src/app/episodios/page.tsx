@@ -50,31 +50,13 @@ export default async function PodcastPage({ searchParams }: PageProps) {
       <main className="flex-grow pt-24 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           
-          {/* Header & Hero Section */}
-          <div className="relative rounded-3xl overflow-hidden mb-8 p-8 sm:p-12 border border-white/5 bg-[#0b0e14] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_120%,rgba(245,197,24,0.06)_0%,transparent_60%)] pointer-events-none" />
-            
-            {/* Left Header content */}
-            <div className="flex flex-col gap-4 text-center md:text-left z-10 max-w-xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[var(--yellow-glow)] border border-[var(--yellow)]/10 text-[var(--yellow)] w-max mx-auto md:mx-0">
-                <Mic className="w-3.5 h-3.5" />
-                Podcast & Videos Oficiales
-              </div>
-              <h1 className="font-display text-4xl sm:text-6xl tracking-wider text-white uppercase leading-none">
-                El Show <span className="text-[var(--yellow)]">detrás del Show</span>
-              </h1>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Mira las entrevistas sin censura y los duelos completos de tus streamers favoritos de <strong>Micasino TV Show</strong>. Transmisiones estables y seguras con nuestra red de servidores redundantes de video.
-              </p>
-            </div>
-
-            {/* Right Mic Graphic */}
-            <div className="relative shrink-0 flex items-center justify-center w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr from-yellow-500/10 via-amber-500/5 to-transparent border border-[var(--yellow)]/20 shadow-[0_0_40px_rgba(245,197,24,0.08)] z-10">
-              <Mic className="w-16 h-16 sm:w-20 sm:h-20 text-[var(--yellow)] drop-shadow-[0_0_20px_rgba(245,197,24,0.4)]" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--yellow)] flex items-center justify-center text-[8px] text-black font-black font-mono shadow-md animate-pulse">
-                REC
-              </div>
-            </div>
+          {/* Header Image */}
+          <div className="flex justify-center mb-10">
+            <img 
+              src="/logo_episodios.png" 
+              alt="Episodios" 
+              className="h-20 sm:h-28 w-auto object-contain drop-shadow-[0_0_15px_rgba(245,197,24,0.1)]"
+            />
           </div>
 
           {/* Admin Management Panel */}

@@ -132,7 +132,7 @@ export async function addPodcastEpisode(formData: FormData) {
       dailymotionId: dailymotionId || null,
     })
 
-    revalidatePath('/podcast')
+    revalidatePath('/episodios')
     return { success: '¡Episodio cargado exitosamente!' }
   } catch (error: any) {
     console.error('Error adding podcast episode:', error)
@@ -142,6 +142,25 @@ export async function addPodcastEpisode(formData: FormData) {
 
 export async function seedPodcastEpisodes() {
   try {
+    const session = await auth()
+    let isRealAdmin = false
+    if (session?.user?.id) {
+      const [userDb] = await db
+        .select({ role: users.role })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1)
+      if (userDb?.role === 'ADMIN') {
+        isRealAdmin = true
+      }
+    }
+
+    const isAdmin = isRealAdmin || (process.env.NODE_ENV === 'development')
+
+    if (!isAdmin) {
+      return { error: 'No tienes permisos de administrador para sembrar episodios.' }
+    }
+
     const [result] = await db.select({ count: count() }).from(podcastEpisodes)
     if (result.count > 0) {
       return { info: 'La base de datos ya cuenta con episodios cargados.' }
@@ -182,7 +201,7 @@ export async function seedPodcastEpisodes() {
       await db.insert(podcastEpisodes).values(item)
     }
 
-    revalidatePath('/podcast')
+    revalidatePath('/episodios')
     return { success: '¡Episodios de muestra sembrados exitosamente!' }
   } catch (error: any) {
     console.error('Error seeding episodes:', error)

@@ -130,7 +130,7 @@ export default async function QueEsTvShowPage() {
 
             <div className="flex flex-wrap items-center justify-center gap-4 z-10">
               <Link
-                href="/podcast"
+                href="/episodios"
                 className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_12px_rgba(245,197,24,0.2)] hover:shadow-[0_4px_20px_rgba(245,197,24,0.35)] flex items-center gap-2"
               >
                 <Play className="w-4 h-4 fill-current" /> Ver Capítulos
@@ -144,7 +144,7 @@ export default async function QueEsTvShowPage() {
               </Link>
 
               <Link
-                href="/jugadores"
+                href="/influencers"
                 className="px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/5 hover:border-transparent text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center gap-2"
               >
                 <Users className="w-4 h-4" /> Ver Influencers
