@@ -65,6 +65,8 @@ export async function addPodcastEpisode(formData: FormData) {
 
     const title = formData.get('title') as string
     const description = formData.get('description') as string
+    const category = (formData.get('category') as string) || 'ENTREVISTA'
+    let shortDescription = (formData.get('shortDescription') as string) || ''
     const episodeNumberStr = formData.get('episodeNumber') as string
     const rawYoutube = formData.get('youtubeUrl') as string
     const rawVimeo = formData.get('vimeoUrl') as string
@@ -73,6 +75,10 @@ export async function addPodcastEpisode(formData: FormData) {
 
     if (!title || !description || !episodeNumberStr) {
       return { error: 'El título, la descripción y el número de episodio son obligatorios.' }
+    }
+
+    if (shortDescription.length > 120) {
+      shortDescription = shortDescription.slice(0, 120)
     }
 
     const episodeNumber = parseInt(episodeNumberStr, 10)
@@ -126,6 +132,8 @@ export async function addPodcastEpisode(formData: FormData) {
       episodeNumber,
       title,
       description,
+      shortDescription,
+      category,
       thumbnailUrl,
       youtubeId: youtubeId || null,
       vimeoId: vimeoId || null,
@@ -172,6 +180,8 @@ export async function seedPodcastEpisodes() {
         episodeNumber: 1,
         title: '🎰 Duelo de Titanes: Ibai Llanos vs Rubius | Gran Estreno Micasino',
         description: 'En este primer episodio del show, Ibai y Rubius se enfrentan en una serie de penitencias absurdas, revelan los secretos detrás de sus canales de streaming y confiesan qué harían con un bote millonario en Micasino. (Nota: YouTube está cargado con un ID roto a propósito para demostrar la transición automática y silenciosa a Vimeo).',
+        shortDescription: 'Ibai y Rubius se enfrentan en penitencias absurdas y revelan secretos de streaming en Micasino.',
+        category: 'ENTREVISTA',
         thumbnailUrl: '/cartoons/avatar-1.png',
         youtubeId: 'broken-youtube-link-test', // Will trigger fallback automatically!
         vimeoId: '76979871', // Cinematic public Vimeo video
@@ -181,6 +191,8 @@ export async function seedPodcastEpisodes() {
         episodeNumber: 2,
         title: '🎲 Habilidad o Azar: El debate con Coscu y Davo Xeneize',
         description: '¿Los casinos y duelos de ruletas se ganan con estrategia matemática o es pura intuición divina? Davo Xeneize defiende sus tácticas de slots mientras Coscu relata su audacia y anécdotas de suerte en grandes casinos.',
+        shortDescription: '¿Slots por estrategia o intuición? Davo Xeneize y Coscu debaten sus tácticas en vivo.',
+        category: 'DEBATE',
         thumbnailUrl: '/cartoons/avatar-2.png',
         youtubeId: '90453221', // Rickroll or placeholder
         vimeoId: '338166524',
@@ -190,6 +202,8 @@ export async function seedPodcastEpisodes() {
         episodeNumber: 3,
         title: '🔥 Confesiones en Vivo: Las penitencias del Staff de Influencers',
         description: 'Todo el elenco de creadores de contenido de slots, ruletas y televisión de Micasino se reúnen en la mesa de discusión. Revelan las anécdotas más virales de la temporada y el reto extremo que puso a sudar a los anfitriones.',
+        shortDescription: 'El staff de influencers de Micasino revela anécdotas virales y el reto extremo de la temporada.',
+        category: 'EN VIVO',
         thumbnailUrl: '/cartoons/avatar-3.png',
         youtubeId: 'dQw4w9WgXcQ', // Rickroll
         vimeoId: '76979871',

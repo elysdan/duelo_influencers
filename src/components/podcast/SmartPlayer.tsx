@@ -14,7 +14,7 @@ interface Episode {
   dailymotionId: string | null
 }
 
-export default function SmartPlayer({ episode }: { episode: Episode }) {
+export default function SmartPlayer({ episode, isAdmin }: { episode: Episode; isAdmin?: boolean }) {
   const [provider, setProvider] = useState<'youtube' | 'vimeo' | 'dailymotion' | 'failed'>('youtube')
   const [isTransitioning, setIsTransitioning] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -304,7 +304,7 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Episode Info */}
-        <div className="lg:col-span-2 flex flex-col gap-3">
+        <div className={`${isAdmin ? 'lg:col-span-2' : 'lg:col-span-3'} flex flex-col gap-3`}>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
               Episodio {episode.episodeNumber}
@@ -341,71 +341,73 @@ export default function SmartPlayer({ episode }: { episode: Episode }) {
         </div>
 
         {/* Live Router Monitor */}
-        <div className="glass-card rounded-2xl p-4 border border-white/5 bg-[#0b0e14]/50 flex flex-col gap-3 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none" />
+        {isAdmin && (
+          <div className="glass-card rounded-2xl p-4 border border-white/5 bg-[#0b0e14]/50 flex flex-col gap-3 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <div className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-yellow-500 animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-wider text-gray-200">Ruteador Inteligente CDN</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
-              <span className="text-[9px] font-bold text-green-400 font-mono">LIVE</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2.5 font-mono text-[10px]">
-            {routingHistory.map((item, idx) => (
-              <div key={idx} className="flex items-center justify-between gap-2 text-gray-400">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-600">[{idx + 1}]</span>
-                  <span>{item.platform}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {item.status === 'pending' && (
-                    <span className="text-yellow-500 font-bold flex items-center gap-1 animate-pulse">
-                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" /> PROBANDO
-                    </span>
-                  )}
-                  {item.status === 'success' && (
-                    <span className="text-green-500 font-bold flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" /> CONECTADO
-                    </span>
-                  )}
-                  {item.status === 'failed' && (
-                    <span className="text-red-500 font-bold flex items-center gap-1 line-through opacity-70">
-                      ✕ CAÍDO
-                    </span>
-                  )}
-                  {item.status === 'skipped' && (
-                    <span className="text-gray-600 font-bold">
-                      ∅ NO DEF.
-                    </span>
-                  )}
-                </div>
+            <div className="flex items-center justify-between border-b border-white/5 pb-2">
+              <div className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-yellow-500 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-gray-200">Ruteador Inteligente CDN</span>
               </div>
-            ))}
-          </div>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+                <span className="text-[9px] font-bold text-green-400 font-mono">LIVE</span>
+              </div>
+            </div>
 
-          {/* Fallback Tester Utility (Helpful to trigger manually if needed) */}
-          <div className="mt-1 pt-2 border-t border-white/5 flex items-center justify-between gap-2">
-            <span className="text-[9px] text-gray-500 flex items-center gap-1">
-              <HelpCircle className="w-3 h-3" /> ¿Problemas con la reproducción?
-            </span>
-            <button
-              onClick={() => {
-                if (provider === 'youtube') triggerFallback('youtube')
-                else if (provider === 'vimeo') triggerFallback('vimeo')
-                else if (provider === 'dailymotion') triggerFallback('dailymotion')
-              }}
-              disabled={provider === 'failed'}
-              className="px-2.5 py-1 bg-yellow-500/10 hover:bg-yellow-500 text-yellow-500 hover:text-black border border-yellow-500/20 hover:border-transparent rounded-lg text-[9px] font-bold transition-all flex items-center gap-1 uppercase tracking-widest disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-            >
-              Saltar Servidor
-            </button>
+            <div className="flex flex-col gap-2.5 font-mono text-[10px]">
+              {routingHistory.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between gap-2 text-gray-400">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-gray-600">[{idx + 1}]</span>
+                    <span>{item.platform}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {item.status === 'pending' && (
+                      <span className="text-yellow-500 font-bold flex items-center gap-1 animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" /> PROBANDO
+                      </span>
+                    )}
+                    {item.status === 'success' && (
+                      <span className="text-green-500 font-bold flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" /> CONECTADO
+                      </span>
+                    )}
+                    {item.status === 'failed' && (
+                      <span className="text-red-500 font-bold flex items-center gap-1 line-through opacity-70">
+                        ✕ CAÍDO
+                      </span>
+                    )}
+                    {item.status === 'skipped' && (
+                      <span className="text-gray-600 font-bold">
+                        ∅ NO DEF.
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Fallback Tester Utility (Helpful to trigger manually if needed) */}
+            <div className="mt-1 pt-2 border-t border-white/5 flex items-center justify-between gap-2">
+              <span className="text-[9px] text-gray-500 flex items-center gap-1">
+                <HelpCircle className="w-3 h-3" /> ¿Problemas con la reproducción?
+              </span>
+              <button
+                onClick={() => {
+                  if (provider === 'youtube') triggerFallback('youtube')
+                  else if (provider === 'vimeo') triggerFallback('vimeo')
+                  else if (provider === 'dailymotion') triggerFallback('dailymotion')
+                }}
+                disabled={provider === 'failed'}
+                className="px-2.5 py-1 bg-yellow-500/10 hover:bg-yellow-500 text-yellow-500 hover:text-black border border-yellow-500/20 hover:border-transparent rounded-lg text-[9px] font-bold transition-all flex items-center gap-1 uppercase tracking-widest disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              >
+                Saltar Servidor
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
       </div>
     </div>

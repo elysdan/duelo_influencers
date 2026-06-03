@@ -129,6 +129,40 @@ export default function AdminPanel({
 
               </div>
 
+              {/* Category & Short Description */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Category Tag */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-400">Categoría / Etiqueta</label>
+                  <input
+                    name="category"
+                    type="text"
+                    defaultValue="ENTREVISTA"
+                    required
+                    placeholder="Ej: ENTREVISTA"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all font-mono"
+                  />
+                </div>
+
+                {/* Short Description */}
+                <div className="md:col-span-2 flex flex-col gap-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-black uppercase tracking-wider text-gray-400">Descripción Corta (Miniatura)</label>
+                    <span className="text-[10px] text-gray-500 font-mono">Máx. 120 caracteres</span>
+                  </div>
+                  <input
+                    name="shortDescription"
+                    type="text"
+                    required
+                    maxLength={120}
+                    placeholder="Descripción breve para la miniatura en el catálogo..."
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  />
+                </div>
+
+              </div>
+
               {/* Description */}
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-black uppercase tracking-wider text-gray-400">Descripción del Show</label>

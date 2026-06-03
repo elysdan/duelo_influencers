@@ -3,14 +3,12 @@ import { db } from '@/db'
 import { podcastEpisodes, users } from '@/db/schema'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import SmartPlayer from '@/components/podcast/SmartPlayer'
 import AdminPanel from '@/components/podcast/AdminPanel'
-import PodcastLibrary from '@/components/podcast/PodcastLibrary'
 import { desc, eq } from 'drizzle-orm'
 import Link from 'next/link'
-import { Mic, Sparkles, Play, Calendar, Video, Clock } from 'lucide-react'
+import { Mic } from 'lucide-react'
 
-export const metadata = { title: 'Podcast y Videos Oficiales | Micasino TV Show' }
+export const metadata = { title: 'Episodios Oficiales | Micasino TV Show' }
 
 interface PageProps {
   searchParams: Promise<{ ep?: string }>
@@ -18,17 +16,12 @@ interface PageProps {
 
 export default async function PodcastPage({ searchParams }: PageProps) {
   const session = await auth()
-  const resolvedParams = await searchParams
-  const activeEpId = resolvedParams.ep
 
   // Fetch all episodes from database in descending order of episodeNumber
   const episodes = await db
     .select()
     .from(podcastEpisodes)
     .orderBy(desc(podcastEpisodes.episodeNumber))
-
-  // Find active episode (default to the latest/first episode if not specified)
-  const activeEpisode = episodes.find(e => e.id === activeEpId) || episodes[0]
 
   const isDev = process.env.NODE_ENV === 'development'
   let isRealAdmin = false
@@ -41,6 +34,14 @@ export default async function PodcastPage({ searchParams }: PageProps) {
     if (userDb?.role === 'ADMIN') {
       isRealAdmin = true
     }
+  }
+
+  // Helper to check if an episode is new (created in the last 3 days)
+  const isNewEpisode = (createdAt: Date) => {
+    const now = new Date()
+    const diffTime = now.getTime() - new Date(createdAt).getTime()
+    const diffDays = diffTime / (1000 * 60 * 60 * 24)
+    return diffDays <= 3
   }
 
   return (
@@ -63,21 +64,47 @@ export default async function PodcastPage({ searchParams }: PageProps) {
           <AdminPanel isDev={isDev} isRealAdmin={isRealAdmin} />
 
           {/* Main Episode Content Layout */}
-          {activeEpisode ? (
-            <div className="flex flex-col gap-12">
-              
-              {/* Active Smart Player Box */}
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3 border-b border-white/5 pb-3">
-                  <Video className="w-5 h-5 text-yellow-500" />
-                  <h2 className="text-base font-black uppercase tracking-wider text-white">Reproductor Inteligente Activo</h2>
-                </div>
-                <SmartPlayer episode={activeEpisode} />
-              </div>
+          {episodes.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+              {episodes.map((ep) => (
+                <Link 
+                  key={ep.id} 
+                  href={`/episodios/${ep.id}`} 
+                  target="_blank" 
+                  className="group flex flex-col gap-4 focus:outline-none"
+                >
+                  {/* Thumbnail Image Wrapper */}
+                  <div className="relative aspect-[16/9] w-full rounded-none overflow-hidden bg-black border border-white/10 group-hover:border-yellow-500/30 transition-all duration-300 isolate">
+                    <img 
+                      src={ep.thumbnailUrl} 
+                      alt={ep.title} 
+                      className="w-full h-full object-contain rounded-none group-hover:scale-[1.02] transition-transform duration-500"
+                    />
+                    
+                    {/* Category badge */}
+                    <span className="absolute top-0 left-0 bg-white text-black text-[10px] font-black uppercase tracking-widest px-4 py-2 shadow-md animate-fade-in rounded-none">
+                      {ep.category}
+                    </span>
 
-              {/* Podcast Date-Based Folder Library */}
-              <PodcastLibrary episodes={episodes} activeEpisodeId={activeEpisode.id} />
+                    {/* Nuevo badge */}
+                    {isNewEpisode(ep.createdAt) && (
+                      <span className="absolute bottom-0 right-0 bg-[#e11d48] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 shadow-md rounded-none">
+                        NUEVO
+                      </span>
+                    )}
+                  </div>
 
+                  {/* Title & Brief Description */}
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-lg font-black text-white leading-snug group-hover:text-yellow-500 transition-colors duration-200">
+                      {ep.title}
+                    </h3>
+                    <p className="text-sm text-gray-400 leading-relaxed line-clamp-2">
+                      {ep.shortDescription || ep.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
           ) : (
             // Empty State
@@ -97,3 +124,4 @@ export default async function PodcastPage({ searchParams }: PageProps) {
     </div>
   )
 }
+

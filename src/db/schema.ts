@@ -257,6 +257,8 @@ export const podcastEpisodes = pgTable('podcast_episodes', {
   episodeNumber: integer('episode_number').notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
+  shortDescription: text('short_description').default('').notNull(),
+  category: text('category').default('ENTREVISTA').notNull(),
   thumbnailUrl: text('thumbnail_url').notNull(),
   youtubeId: text('youtube_id'),
   vimeoId: text('vimeo_id'),
