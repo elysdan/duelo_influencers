@@ -50,7 +50,7 @@ interface HomeGridProps {
 }
 
 export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGridProps) {
-  const videoSource = '/videos/MICRO DUELO DE INFLUENCER 1805 APROB.mp4'
+  const videoSource = '/videos/COLETILLA DUELO DE INFLUENCER WEB 20SEG-DEF.mp4'
   const [isLivePlaying, setIsLivePlaying] = React.useState(false)
 
   // ==========================================
@@ -171,7 +171,7 @@ export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGr
             {/* Live Streaming Frame container */}
             <div
               onClick={() => setIsLivePlaying(true)}
-              className="relative w-full aspect-video rounded-3xl overflow-hidden bg-black/60 border border-white/5 shadow-2xl group cursor-pointer"
+              className="relative w-full aspect-video rounded-3xl overflow-hidden bg-black/60 border border-white/5 shadow-2xl group cursor-pointer keep-text-white"
             >
               {isLivePlaying ? (
                 <iframe
@@ -201,20 +201,10 @@ export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGr
                 </>
               )}
             </div>
-
-            {/* Giant Yellow betting call to action button linking directly to micasino.com */}
-            <a
-              href="https://micasino.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full text-center py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-black text-xs sm:text-sm uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_20px_rgba(245,197,24,0.3)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer animate-pulse-slow"
-            >
-              Apuesta aquí por tu favorito
-            </a>
           </div>
 
           {/* Bottom Widget: Stadium World Cup Trophy Banner with Whatsapp Action */}
-          <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-video rounded-3xl overflow-hidden bg-black/60 border border-white/5 shadow-2xl group mt-2">
+          <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-video rounded-3xl overflow-hidden bg-black/60 border border-white/5 shadow-2xl group mt-2 keep-text-white">
             <img
               src="/stadium_trophy.png"
               alt="Estadio Monumental y Copa del Mundo"

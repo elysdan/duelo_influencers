@@ -73,10 +73,6 @@ export default function AdminBlogConsole({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    
-    // Add simulation flag
-    formData.append('isSimulatedAdmin', 'false')
-
     startTransition(async () => {
       setMessage(null)
       const result = await addBlogPost(formData)

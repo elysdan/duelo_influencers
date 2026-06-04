@@ -25,6 +25,10 @@ export async function GET(
     else if (ext === '.webp') contentType = 'image/webp'
     else if (ext === '.gif') contentType = 'image/gif'
     else if (ext === '.svg') contentType = 'image/svg+xml'
+    else if (ext === '.mp4') contentType = 'video/mp4'
+    else if (ext === '.webm') contentType = 'video/webm'
+    else if (ext === '.ogg') contentType = 'video/ogg'
+    else if (ext === '.mov') contentType = 'video/quicktime'
 
     return new NextResponse(fileBuffer, {
       headers: {

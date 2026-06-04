@@ -43,8 +43,6 @@ import { users } from '@/db/schema'
 export async function addPodcastEpisode(formData: FormData) {
   try {
     const session = await auth()
-    const isSimulatedAdmin = formData.get('isSimulatedAdmin') === 'true'
-    
     let isRealAdmin = false
     if (session?.user?.id) {
       const [userDb] = await db
@@ -57,9 +55,7 @@ export async function addPodcastEpisode(formData: FormData) {
       }
     }
 
-    const isAdmin = isRealAdmin || (isSimulatedAdmin && process.env.NODE_ENV === 'development')
-
-    if (!isAdmin) {
+    if (!isRealAdmin) {
       return { error: 'No tienes permisos de administrador para añadir episodios.' }
     }
 
@@ -220,5 +216,174 @@ export async function seedPodcastEpisodes() {
   } catch (error: any) {
     console.error('Error seeding episodes:', error)
     return { error: `Error de siembra: ${error.message || 'Desconocido'}` }
+  }
+}
+
+export async function editPodcastEpisode(formData: FormData) {
+  try {
+    const session = await auth()
+    const id = formData.get('id') as string
+    let isRealAdmin = false
+    if (session?.user?.id) {
+      const [userDb] = await db
+        .select({ role: users.role })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1)
+      if (userDb?.role === 'ADMIN') {
+        isRealAdmin = true
+      }
+    }
+
+    if (!isRealAdmin) {
+      return { error: 'No tienes permisos de administrador para editar episodios.' }
+    }
+
+    if (!id) {
+      return { error: 'ID de episodio no especificado.' }
+    }
+
+    // Fetch existing episode
+    const [existing] = await db
+      .select()
+      .from(podcastEpisodes)
+      .where(eq(podcastEpisodes.id, id))
+      .limit(1)
+
+    if (!existing) {
+      return { error: 'El episodio a editar no existe.' }
+    }
+
+    const title = formData.get('title') as string
+    const description = formData.get('description') as string
+    const category = (formData.get('category') as string) || 'ENTREVISTA'
+    let shortDescription = (formData.get('shortDescription') as string) || ''
+    const episodeNumberStr = formData.get('episodeNumber') as string
+    const rawYoutube = formData.get('youtubeUrl') as string
+    const rawVimeo = formData.get('vimeoUrl') as string
+    const rawDailymotion = formData.get('dailymotionUrl') as string
+    const thumbnailFile = formData.get('thumbnailFile') as File | null
+
+    if (!title || !description || !episodeNumberStr) {
+      return { error: 'El título, la descripción y el número de episodio son obligatorios.' }
+    }
+
+    if (shortDescription.length > 120) {
+      shortDescription = shortDescription.slice(0, 120)
+    }
+
+    const episodeNumber = parseInt(episodeNumberStr, 10)
+    if (isNaN(episodeNumber)) {
+      return { error: 'El número de episodio debe ser un número entero válido.' }
+    }
+
+    const youtubeId = extractYouTubeId(rawYoutube)
+    const vimeoId = extractVimeoId(rawVimeo)
+    const dailymotionId = extractDailyMotionId(rawDailymotion)
+
+    let thumbnailUrl = existing.thumbnailUrl
+
+    // Process file upload if provided and valid
+    const hasUpload = thumbnailFile && 
+                      typeof thumbnailFile === 'object' && 
+                      'size' in thumbnailFile && 
+                      thumbnailFile.size > 0 && 
+                      'name' in (thumbnailFile as any) &&
+                      (thumbnailFile as any).name !== '' &&
+                      (thumbnailFile as any).name !== 'undefined';
+
+    if (hasUpload) {
+      const fileToUpload = thumbnailFile as File
+      
+      const date = new Date()
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = String(date.getFullYear()).slice(-2)
+      const folderName = `${day}${month}${year}`
+
+      const uploadDir = path.join(process.cwd(), 'uploads', 'podcast-thumbs', folderName)
+      await mkdir(uploadDir, { recursive: true })
+
+      const buffer = Buffer.from(await fileToUpload.arrayBuffer())
+      const ext = path.extname(fileToUpload.name) || '.png'
+      const filename = `ep-${episodeNumber}-${Date.now()}${ext}`
+      const filepath = path.join(uploadDir, filename)
+
+      await writeFile(filepath, buffer)
+      thumbnailUrl = `/api/uploads/podcast-thumbs/${folderName}/${filename}`
+    } else {
+      const rawThumbnailUrl = formData.get('thumbnailUrl') as string
+      if (rawThumbnailUrl && rawThumbnailUrl.trim() !== '') {
+        thumbnailUrl = rawThumbnailUrl.trim()
+      }
+    }
+
+    await db
+      .update(podcastEpisodes)
+      .set({
+        episodeNumber,
+        title,
+        description,
+        shortDescription,
+        category,
+        thumbnailUrl,
+        youtubeId: youtubeId || null,
+        vimeoId: vimeoId || null,
+        dailymotionId: dailymotionId || null,
+      })
+      .where(eq(podcastEpisodes.id, id))
+
+    revalidatePath('/episodios')
+    revalidatePath(`/episodios/${id}`)
+    return { success: '¡Episodio editado exitosamente!' }
+  } catch (error: any) {
+    console.error('Error editing podcast episode:', error)
+    return { error: `Error interno al editar el episodio: ${error.message || 'Desconocido'}` }
+  }
+}
+
+export async function deletePodcastEpisode(id: string) {
+  try {
+    const session = await auth()
+    
+    let isRealAdmin = false
+    if (session?.user?.id) {
+      const [userDb] = await db
+        .select({ role: users.role })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1)
+      if (userDb?.role === 'ADMIN') {
+        isRealAdmin = true
+      }
+    }
+
+    if (!isRealAdmin) {
+      return { error: 'No tienes permisos de administrador para eliminar episodios.' }
+    }
+
+    if (!id) {
+      return { error: 'ID de episodio no especificado.' }
+    }
+
+    const [existing] = await db
+      .select({ id: podcastEpisodes.id })
+      .from(podcastEpisodes)
+      .where(eq(podcastEpisodes.id, id))
+      .limit(1)
+
+    if (!existing) {
+      return { error: 'El episodio que intentas eliminar no existe.' }
+    }
+
+    await db.delete(podcastEpisodes).where(eq(podcastEpisodes.id, id))
+
+    revalidatePath('/episodios')
+    revalidatePath(`/episodios/${id}`)
+
+    return { success: '¡Episodio eliminado exitosamente!' }
+  } catch (error: any) {
+    console.error('Error deleting podcast episode:', error)
+    return { error: `Error interno al eliminar el episodio: ${error.message || 'Desconocido'}` }
   }
 }

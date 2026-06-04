@@ -4,6 +4,7 @@ import { podcastEpisodes, users } from '@/db/schema'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import SmartPlayer from '@/components/podcast/SmartPlayer'
+import AdminEpisodeActions from '@/components/podcast/AdminEpisodeActions'
 import { eq } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import { Video, ArrowLeft } from 'lucide-react'
@@ -73,6 +74,12 @@ export default async function EpisodeDetailPage({ params }: PageProps) {
                 <span className="text-xs font-black uppercase tracking-widest text-white">Reproductor Oficial</span>
               </div>
             </div>
+            
+            {/* Moderation actions console */}
+            {isRealAdmin && (
+              <AdminEpisodeActions episode={episode} isRealAdmin={isRealAdmin} />
+            )}
+
             <SmartPlayer episode={episode} isAdmin={isRealAdmin} />
           </div>
         </div>

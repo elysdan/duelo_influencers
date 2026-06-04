@@ -23,8 +23,6 @@ function generateSlug(title: string): string {
 export async function addBlogPost(formData: FormData) {
   try {
     const session = await auth()
-    const isSimulatedAdmin = formData.get('isSimulatedAdmin') === 'true'
-    
     let isRealAdmin = false
     if (session?.user?.id) {
       const [userDb] = await db
@@ -37,9 +35,7 @@ export async function addBlogPost(formData: FormData) {
       }
     }
 
-    const isAdmin = isRealAdmin || (isSimulatedAdmin && process.env.NODE_ENV === 'development')
-
-    if (!isAdmin) {
+    if (!isRealAdmin) {
       return { error: 'No tienes permisos de administrador para añadir artículos de blog.' }
     }
 
@@ -231,8 +227,6 @@ export async function editBlogPost(formData: FormData) {
   try {
     const session = await auth()
     const id = formData.get('id') as string
-    const isSimulatedAdmin = formData.get('isSimulatedAdmin') === 'true'
-    
     let isRealAdmin = false
     if (session?.user?.id) {
       const [userDb] = await db
@@ -245,9 +239,7 @@ export async function editBlogPost(formData: FormData) {
       }
     }
 
-    const isAdmin = isRealAdmin || (isSimulatedAdmin && process.env.NODE_ENV === 'development')
-
-    if (!isAdmin) {
+    if (!isRealAdmin) {
       return { error: 'No tienes permisos de administrador para editar artículos de blog.' }
     }
 
@@ -409,7 +401,7 @@ export async function editBlogPost(formData: FormData) {
   }
 }
 
-export async function deleteBlogPost(id: string, isSimulatedAdmin: boolean) {
+export async function deleteBlogPost(id: string) {
   try {
     const session = await auth()
     
@@ -425,9 +417,7 @@ export async function deleteBlogPost(id: string, isSimulatedAdmin: boolean) {
       }
     }
 
-    const isAdmin = isRealAdmin || (isSimulatedAdmin && process.env.NODE_ENV === 'development')
-
-    if (!isAdmin) {
+    if (!isRealAdmin) {
       return { error: 'No tienes permisos de administrador para eliminar artículos de blog.' }
     }
 

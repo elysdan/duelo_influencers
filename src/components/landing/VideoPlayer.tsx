@@ -11,6 +11,8 @@ interface VideoPlayerProps {
 export default function VideoPlayer({ src }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const [hasStarted, setHasStarted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -18,14 +20,20 @@ export default function VideoPlayer({ src }: VideoPlayerProps) {
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Handle Play/Pause
-  const togglePlay = () => {
+  const togglePlay = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
     if (!videoRef.current) return
     if (isPlaying) {
       videoRef.current.pause()
+      setIsPlaying(false)
     } else {
+      if (!hasStarted) {
+        videoRef.current.currentTime = 0
+        setHasStarted(true)
+      }
       videoRef.current.play().catch((err) => console.log('Playback error: ', err))
+      setIsPlaying(true)
     }
-    setIsPlaying(!isPlaying)
   }
 
   // Update progress slider
@@ -48,7 +56,8 @@ export default function VideoPlayer({ src }: VideoPlayerProps) {
   }
 
   // Fullscreen toggle
-  const toggleFullscreen = () => {
+  const toggleFullscreen = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
     if (!containerRef.current) return
     if (!document.fullscreenElement) {
       containerRef.current.requestFullscreen().then(() => {
@@ -94,49 +103,43 @@ export default function VideoPlayer({ src }: VideoPlayerProps) {
   return (
     <div
       ref={containerRef}
-      className="relative overflow-hidden group bg-black transition-all duration-300 rounded-2xl border border-white/5 shadow-2xl w-full aspect-video"
+      className="relative overflow-hidden group bg-black transition-all duration-300 rounded-2xl border border-white/5 shadow-2xl w-full aspect-video keep-text-white"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
       {/* HTML5 Video Tag */}
       <video
         ref={videoRef}
-        src={src}
-        className="w-full h-full object-contain cursor-pointer"
-        onClick={togglePlay}
+        src={src + '#t=0.5'}
+        preload="auto"
+        className="w-full h-full object-cover cursor-pointer"
+        onClick={() => togglePlay()}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => setIsPlaying(false)}
         playsInline
-        poster="/esports_hero_bg.png"
       />
 
       {/* Immersive esports hero text and play overlay (visible when paused/ended) */}
       {!isPlaying && (
         <div
-          onClick={togglePlay}
-          className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 sm:p-12 md:p-16 text-center cursor-pointer transition-all duration-500 bg-cover bg-center select-none"
-          style={{ backgroundImage: "linear-gradient(to bottom, rgba(7, 9, 15, 0.4) 0%, rgba(7, 9, 15, 0.85) 100%), url('/esports_hero_bg.png')" }}
+          onClick={() => togglePlay()}
+          className="absolute inset-0 z-10 flex flex-col justify-end lg:justify-center items-start p-6 sm:p-12 md:p-16 text-left cursor-pointer transition-all duration-500 select-none"
+          style={{
+            background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%), linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 45%)"
+          }}
         >
-          <div className="flex flex-col items-center max-w-3xl transform hover:scale-[1.01] transition-transform duration-500">
-            {/* Composite Game Show Logo (logo2.png + logo_etiqueta.png stacked and overlapping) */}
-            <div className="relative flex flex-col items-center select-none pointer-events-none mb-4">
-              <img
-                src="/logo2.png"
-                alt="Micasino TV Show"
-                className="w-[80%] sm:w-[70%] md:w-[60%] max-w-[1280px] h-auto object-contain block drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
-                loading="eager"
-              />
-              <img
-                src="/logo_etiqueta.png"
-                alt="Duelo de Influencers"
-                className="w-[70%] sm:w-[60%] md:w-[50%] max-w-[310px] h-auto object-contain block -mt-6 sm:-mt-10 md:-mt-12 relative z-10 translate-x-[95px] translate-y-[25px] drop-shadow-[0_8px_15px_rgba(0,0,0,0.4)]"
-                loading="eager"
-              />
-            </div>
+          <div className="flex flex-col items-start max-w-xl sm:max-w-2xl gap-3 transform hover:scale-[1.005] transition-transform duration-500">
+            {/* Logo: Duelo de Influencers */}
+            <img
+              src="/logo_etiqueta.png"
+              alt="Duelo de Influencers"
+              className="w-[85%] sm:w-[75%] max-w-[280px] h-auto object-contain block drop-shadow-[0_8px_15px_rgba(0,0,0,0.4)] mb-2"
+              loading="eager"
+            />
 
-            {/* Centered Symmetrical Arena Paragraph */}
-            <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed max-w-2xl select-none font-medium px-4 sm:px-8">
-              La arena está lista. Los mayores creadores de contenido de la región se enfrentan en la batalla definitiva. Únete a la comunidad, apoya a tus favoritos y vive la adrenalina de los esports en horario estelar.
+            {/* Left-aligned description */}
+            <p className="text-sm sm:text-lg md:text-xl lg:text-2xl text-white leading-relaxed font-semibold drop-shadow-md">
+              La arena está lista. Los mayores mayores creadores de contenido de la región se enfrentan mayoresmayores en la batalla definitiva. Únete a la comunidad, apoya a tus favoritos y vive la adrenalina de los esports en horario estelar.
             </p>
           </div>
         </div>

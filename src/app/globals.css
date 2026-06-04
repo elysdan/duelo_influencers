@@ -3,9 +3,9 @@
 @layer base {
   :root {
     /* Fondo */
-    --bg-base: #06070b;
-    --bg-card: #0b0e14;
-    --bg-elevated: #111622;
+    --bg-base: #eaeaea;
+    --bg-card: #ffffff;
+    --bg-elevated: #f4f4f5;
 
     /* Micasino Gold & Dark - tonos premium */
     --yellow: #F5C518;
@@ -13,27 +13,27 @@
     --yellow-glow: rgba(245, 197, 24, 0.12);
 
     /* Adaptación de colores antiguos a tonos oscuros de casino para compatibilidad */
-    --blue: #141b29;
-    --blue-light: #1d283d;
-    --blue-glow: rgba(29, 40, 61, 0.15);
+    --blue: #eff6ff;
+    --blue-light: #dbeafe;
+    --blue-glow: rgba(59, 130, 246, 0.1);
 
-    --red: #3b0e13;
-    --red-light: #57151c;
-    --red-glow: rgba(87, 21, 28, 0.1);
+    --red: #fef2f2;
+    --red-light: #fee2e2;
+    --red-glow: rgba(239, 68, 68, 0.1);
 
     /* Textos */
-    --text-primary: #F0F2F7;
-    --text-secondary: #A0AAB8;
-    --text-muted: #5A6478;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #71717a;
 
     /* Glassmorphism */
-    --glass: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.05);
-    --glass-hover: rgba(255, 255, 255, 0.06);
+    --glass: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-hover: rgba(0, 0, 0, 0.03);
 
     /* Bordes */
-    --border: rgba(255, 255, 255, 0.06);
-    --border-strong: rgba(255, 255, 255, 0.12);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.12);
 
     /* Radios */
     --radius: 12px;
@@ -164,5 +164,107 @@
   .mask-bottom {
     mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  /* Redefinición de variables locales para que la barra de navegación (header) se mantenga oscura */
+  header {
+    --bg-base: #06070b !important;
+    --bg-card: #0b0e14 !important;
+    --bg-elevated: #111622 !important;
+    --text-primary: #F0F2F7 !important;
+    --text-secondary: #A0AAB8 !important;
+    --text-muted: #5A6478 !important;
+    --border: rgba(255, 255, 255, 0.06) !important;
+    --border-strong: rgba(255, 255, 255, 0.12) !important;
+    --glass: rgba(255, 255, 255, 0.03) !important;
+    --glass-border: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* Sobrescribir fondo oscuro por defecto a fondo base claro */
+  body .bg-\[\#06070b\] {
+    background-color: var(--bg-base) !important;
+  }
+
+  /* Sobrescribir colores de texto para mantener alta legibilidad en el tema claro */
+  main .text-white, footer .text-white {
+    color: #111827 !important;
+  }
+  main .text-gray-100, footer .text-gray-100,
+  main .text-neutral-100, footer .text-neutral-100,
+  main .text-zinc-100, footer .text-zinc-100 {
+    color: #111827 !important;
+  }
+  main .text-gray-200, footer .text-gray-200,
+  main .text-neutral-200, footer .text-neutral-200,
+  main .text-zinc-200, footer .text-zinc-200 {
+    color: #1f2937 !important;
+  }
+  main .text-gray-300, footer .text-gray-300,
+  main .text-neutral-300, footer .text-neutral-300,
+  main .text-zinc-300, footer .text-zinc-300 {
+    color: #374151 !important;
+  }
+  main .text-gray-400, footer .text-gray-400,
+  main .text-neutral-400, footer .text-neutral-400,
+  main .text-zinc-400, footer .text-zinc-400 {
+    color: #4b5563 !important;
+  }
+  main .text-gray-500, footer .text-gray-500,
+  main .text-neutral-500, footer .text-neutral-500,
+  main .text-zinc-500, footer .text-zinc-500 {
+    color: #71717a !important;
+  }
+  main .text-gray-600, footer .text-gray-600,
+  main .text-neutral-600, footer .text-neutral-600,
+  main .text-zinc-600, footer .text-zinc-600 {
+    color: #9ca3af !important;
+  }
+
+  /* Forzar que los textos permanezcan claros en reproductores y elementos con fondo oscuro explícito */
+  main .keep-text-white, main .keep-text-white *,
+  footer .keep-text-white, footer .keep-text-white * {
+    --tw-text-opacity: 1 !important;
+  }
+  main .keep-text-white .text-white, footer .keep-text-white .text-white {
+    color: #ffffff !important;
+  }
+  main .keep-text-white .text-gray-100, footer .keep-text-white .text-gray-100 {
+    color: #f3f4f6 !important;
+  }
+  main .keep-text-white .text-gray-200, footer .keep-text-white .text-gray-200 {
+    color: #e5e7eb !important;
+  }
+  main .keep-text-white .text-gray-300, footer .keep-text-white .text-gray-300 {
+    color: #d1d5db !important;
+  }
+  main .keep-text-white .text-gray-400, footer .keep-text-white .text-gray-400 {
+    color: #9ca3af !important;
+  }
+  main .keep-text-white .text-gray-500, footer .keep-text-white .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  /* Efecto de hover que cambia a color principal casino en hover */
+  main a.hover\:text-white:hover, footer a.hover\:text-white:hover {
+    color: var(--yellow) !important;
+  }
+
+  /* Sobrescribir elementos de formulario dentro del tema claro */
+  main input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]), 
+  main textarea, 
+  main select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+  }
+  main input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus, 
+  main textarea:focus, 
+  main select:focus {
+    border-color: #f5c518 !important;
+    box-shadow: 0 0 0 1px #f5c518 !important;
+  }
+  main input::placeholder, 
+  main textarea::placeholder {
+    color: #9ca3af !important;
   }
 }

@@ -137,6 +137,11 @@ export const players = pgTable('players', {
   assists: integer('assists').default(0),
   caps: integer('caps').default(0), // partidos internacionales
   hypeCount: integer('hype_count').default(0).notNull(),
+  age: integer('age'),
+  gender: text('gender'),
+  clips: jsonb('clips').$type<{ id: string; title: string; thumbnailUrl: string }[]>(),
+  videoUrl: text('video_url'),
+  country: text('country'),
 })
 
 // ─── Player Hypes ─────────────────────────────────────────────────────────────
@@ -282,3 +287,23 @@ export const blogPosts = pgTable('blog_posts', {
   readTime: text('read_time').default('3 min').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
+
+// ─── System Settings ──────────────────────────────────────────────────────────
+
+export const systemSettings = pgTable('system_settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+})
+
+// ─── Show Games ───────────────────────────────────────────────────────────────
+
+export const showGames = pgTable('show_games', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  imageUrl: text('image_url'),
+  hasImage: boolean('has_image').default(false).notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+

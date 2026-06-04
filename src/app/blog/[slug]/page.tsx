@@ -129,7 +129,9 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
               <div className="absolute top-0 left-0 w-48 h-48 bg-yellow-500/5 rounded-full blur-3xl pointer-events-none" />
 
               {/* Admin Moderation Console */}
-              <AdminBlogActions post={post} isDev={isDev} isRealAdmin={isRealAdmin} />
+              {isRealAdmin && (
+                <AdminBlogActions post={post} isRealAdmin={isRealAdmin} />
+              )}
 
               {/* Title & Headers */}
               <div className="flex flex-col gap-3">

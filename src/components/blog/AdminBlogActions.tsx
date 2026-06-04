@@ -20,14 +20,11 @@ interface BlogPost {
 
 export default function AdminBlogActions({
   post,
-  isDev,
   isRealAdmin,
 }: {
   post: BlogPost
-  isDev: boolean
   isRealAdmin: boolean
 }) {
-  const [isSimulated, setIsSimulated] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -38,6 +35,10 @@ export default function AdminBlogActions({
   
   const mainInputRef = useRef<HTMLInputElement>(null)
   const additionalInputRef = useRef<HTMLInputElement>(null)
+
+  if (!isRealAdmin) {
+    return null
+  }
 
   const handleMainFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -74,7 +75,6 @@ export default function AdminBlogActions({
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     formData.append('id', post.id)
-    formData.append('isSimulatedAdmin', isSimulated ? 'true' : 'false')
 
     startTransition(async () => {
       setMessage(null)
@@ -101,7 +101,7 @@ export default function AdminBlogActions({
   const handleDelete = () => {
     startTransition(async () => {
       setMessage(null)
-      const res = await deleteBlogPost(post.id, isSimulated)
+      const res = await deleteBlogPost(post.id)
       if (res.success) {
         setMessage({ type: 'success', text: res.success })
         setTimeout(() => {
@@ -113,8 +113,6 @@ export default function AdminBlogActions({
       }
     })
   }
-
-  const canAccess = isRealAdmin || (isSimulated && isDev)
 
   return (
     <div className="flex flex-col gap-4 w-full bg-[#0b0e14]/40 border border-white/5 rounded-3xl p-5 sm:p-6 mb-2 text-left relative overflow-hidden shadow-xl">
@@ -132,75 +130,51 @@ export default function AdminBlogActions({
 
         {/* Buttons Controls */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
-          {isDev && (
+          <button
+            onClick={() => {
+              setIsEditing(!isEditing)
+              setIsConfirmingDelete(false)
+              setMessage(null)
+            }}
+            className={`px-3 py-1.5 rounded-lg text-[9px] font-black transition-all uppercase tracking-wider cursor-pointer border flex items-center gap-1.5 ${isEditing ? 'bg-white/10 text-white border-white/15' : 'bg-yellow-500 hover:bg-yellow-600 text-black border-transparent shadow-[0_2px_8px_rgba(245,197,24,0.15)]'}`}
+          >
+            {isEditing ? <X className="w-3 h-3" /> : <Edit2 className="w-3 h-3" />}
+            {isEditing ? 'Cancelar Edición' : 'Editar Artículo'}
+          </button>
+
+          {!isConfirmingDelete ? (
             <button
               onClick={() => {
-                setIsSimulated(!isSimulated)
+                setIsConfirmingDelete(true)
+                setIsEditing(false)
                 setMessage(null)
               }}
-              className={`px-3 py-1.5 rounded-lg text-[9px] font-black transition-all uppercase tracking-wider cursor-pointer border ${isSimulated ? 'bg-yellow-500 text-black border-transparent shadow-md' : 'bg-black/40 text-gray-500 border-white/10 hover:text-white'}`}
+              className="px-3 py-1.5 bg-red-600/10 border border-red-500/20 hover:bg-red-600 hover:text-white hover:border-transparent text-red-400 text-[9px] font-black rounded-lg transition-all flex items-center gap-1.5 uppercase tracking-wider cursor-pointer"
             >
-              {isSimulated ? 'Admin Simulado' : 'Simular Admin'}
+              <Trash2 className="w-3 h-3" />
+              Eliminar Artículo
             </button>
-          )}
-
-          {canAccess && (
-            <>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold text-red-400 uppercase font-mono animate-pulse shrink-0">¿Estás absolutamente seguro?</span>
               <button
-                onClick={() => {
-                  setIsEditing(!isEditing)
-                  setIsConfirmingDelete(false)
-                  setMessage(null)
-                }}
-                className={`px-3 py-1.5 rounded-lg text-[9px] font-black transition-all uppercase tracking-wider cursor-pointer border flex items-center gap-1.5 ${isEditing ? 'bg-white/10 text-white border-white/15' : 'bg-yellow-500 hover:bg-yellow-600 text-black border-transparent shadow-[0_2px_8px_rgba(245,197,24,0.15)]'}`}
+                onClick={handleDelete}
+                disabled={isPending}
+                className="px-3 py-1.5 bg-red-600 text-white hover:bg-red-700 text-[9px] font-black rounded-lg transition-all uppercase tracking-wider cursor-pointer flex items-center gap-1"
               >
-                {isEditing ? <X className="w-3 h-3" /> : <Edit2 className="w-3 h-3" />}
-                {isEditing ? 'Cancelar Edición' : 'Editar Artículo'}
+                {isPending ? <RefreshCw className="w-3 h-3 animate-spin" /> : null}
+                Confirmar Borrado
               </button>
-
-              {!isConfirmingDelete ? (
-                <button
-                  onClick={() => {
-                    setIsConfirmingDelete(true)
-                    setIsEditing(false)
-                    setMessage(null)
-                  }}
-                  className="px-3 py-1.5 bg-red-600/10 border border-red-500/20 hover:bg-red-600 hover:text-white hover:border-transparent text-red-400 text-[9px] font-black rounded-lg transition-all flex items-center gap-1.5 uppercase tracking-wider cursor-pointer"
-                >
-                  <Trash2 className="w-3 h-3" />
-                  Eliminar Artículo
-                </button>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-red-400 uppercase font-mono animate-pulse shrink-0">¿Estás absolutamente seguro?</span>
-                  <button
-                    onClick={handleDelete}
-                    disabled={isPending}
-                    className="px-3 py-1.5 bg-red-600 text-white hover:bg-red-700 text-[9px] font-black rounded-lg transition-all uppercase tracking-wider cursor-pointer flex items-center gap-1"
-                  >
-                    {isPending ? <RefreshCw className="w-3 h-3 animate-spin" /> : null}
-                    Confirmar Borrado
-                  </button>
-                  <button
-                    onClick={() => setIsConfirmingDelete(false)}
-                    className="px-2.5 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-[9px] font-black rounded-lg transition-all uppercase tracking-wider cursor-pointer"
-                  >
-                    Atrás
-                  </button>
-                </div>
-              )}
-            </>
+              <button
+                onClick={() => setIsConfirmingDelete(false)}
+                className="px-2.5 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-[9px] font-black rounded-lg transition-all uppercase tracking-wider cursor-pointer"
+              >
+                Atrás
+              </button>
+            </div>
           )}
         </div>
       </div>
-
-      {/* Access Denied Warning */}
-      {!canAccess && (
-        <div className="mt-3 p-3.5 rounded-xl bg-red-500/5 border border-red-500/15 text-[10px] text-gray-400 leading-relaxed font-mono flex items-center gap-2.5">
-          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-          <span>Acceso Restringido. Utiliza la simulación superior o inicia sesión como administrador para habilitar las acciones.</span>
-        </div>
-      )}
 
       {/* Message Banner */}
       {message && (
@@ -211,7 +185,7 @@ export default function AdminBlogActions({
       )}
 
       {/* Form editing section */}
-      {isEditing && canAccess && (
+      {isEditing && (
         <form onSubmit={handleEditSubmit} className="mt-5 space-y-4 pt-5 border-t border-white/5 animate-fadeIn">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Title */}
