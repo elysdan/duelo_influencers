@@ -19,6 +19,8 @@ interface Player {
   country: string | null
   hypeCount: number
   hasHyped: boolean
+  instagramUrl?: string | null
+  youtubeUrl?: string | null
 }
 
 interface InfluencerProfileDetailsProps {
@@ -46,6 +48,27 @@ const COUNTRIES = [
   { value: 'PERU', label: 'Perú 🇵🇪' },
   { value: 'VENEZUELA', label: 'Venezuela 🇻🇪' },
 ]
+
+function getPlatformName(url: string | null | undefined, fallback: string): string {
+  if (!url) return fallback
+  try {
+    const trimmed = url.trim()
+    const parsedUrl = trimmed.startsWith('http') ? trimmed : `https://${trimmed}`
+    const domain = new URL(parsedUrl).hostname.replace('www.', '')
+    if (domain.includes('instagram.com')) return 'Instagram'
+    if (domain.includes('youtube.com') || domain.includes('youtu.be')) return 'YouTube'
+    if (domain.includes('tiktok.com')) return 'TikTok'
+    if (domain.includes('twitch.tv')) return 'Twitch'
+    if (domain.includes('twitter.com') || domain.includes('x.com')) return 'Twitter / X'
+    if (domain.includes('facebook.com')) return 'Facebook'
+    if (domain.includes('kick.com')) return 'Kick'
+    
+    const parts = domain.split('.')
+    return parts[0].charAt(0).toUpperCase() + parts[0].slice(1)
+  } catch (e) {
+    return fallback
+  }
+}
 
 export default function InfluencerProfileDetails({ player, isAdmin }: InfluencerProfileDetailsProps) {
   const router = useRouter()
@@ -162,23 +185,79 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
         <div className="grid grid-cols-1 md:grid-cols-[330px_1fr] gap-10 items-start">
 
           {/* Left Column: Portrait Card */}
-          <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl w-full max-w-[330px] mx-auto flex flex-col gap-4">
-            {/* Portrait Image Frame */}
-            <div className="rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt={player.name}
-                  className="w-full h-full object-cover object-top"
-                />
+          <div className="flex flex-col gap-4 w-full max-w-[330px] mx-auto">
+            {/* Card Frame */}
+            <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl flex flex-col gap-4">
+              {/* Card Header: ID & Online status */}
+              <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider px-1 text-yellow-500">
+                <span>{formattedId}</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.7)]" />
+                  En Línea
+                </span>
+              </div>
+
+              {/* Portrait Image Frame */}
+              <div className="rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative">
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt={player.name}
+                    className="w-full h-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-5xl">👤</div>
+                )}
+              </div>
+            </div>
+
+            {/* Social Media Buttons */}
+            <div className="grid grid-cols-2 gap-4">
+              {player.instagramUrl ? (
+                <a
+                  href={player.instagramUrl.trim().startsWith('http') ? player.instagramUrl.trim() : `https://${player.instagramUrl.trim()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
+                >
+                  {getPlatformName(player.instagramUrl, 'Instagram')}
+                </a>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-5xl">👤</div>
+                <div className="bg-[#2c2c2c]/40 text-zinc-500 py-3 rounded-lg text-center font-black text-xs uppercase tracking-widest cursor-not-allowed select-none">
+                  Instagram
+                </div>
+              )}
+
+              {player.youtubeUrl ? (
+                <a
+                  href={player.youtubeUrl.trim().startsWith('http') ? player.youtubeUrl.trim() : `https://${player.youtubeUrl.trim()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
+                >
+                  {getPlatformName(player.youtubeUrl, 'YouTube')}
+                </a>
+              ) : (
+                <div className="bg-[#2c2c2c]/40 text-zinc-500 py-3 rounded-lg text-center font-black text-xs uppercase tracking-widest cursor-not-allowed select-none">
+                  YouTube
+                </div>
               )}
             </div>
           </div>
 
           {/* Right Column: Profile Info */}
           <div className="flex flex-col h-full justify-center pt-2 md:pt-4 text-right items-end">
+
+            {/* Country Flag (positioned at the top right as shown in the image) */}
+            {player.country && (
+              <div className="w-14 h-14 rounded-full overflow-hidden border border-zinc-300 shadow-md mb-4 shrink-0 bg-white">
+                <img
+                  src={`/banderas/${player.country.toLowerCase().replace(' ', '-')}.png`}
+                  alt={player.country}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
             {/* Name + User Silhouette Icon */}
             <div className="flex items-center gap-3 mb-2 flex-wrap justify-end">
@@ -193,17 +272,8 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
               </div>
             </div>
 
-            {/* Social Network + Flame Icon + Flag */}
+            {/* Social Network + Flame Icon */}
             <div className="flex items-center gap-3 mb-4 justify-end flex-wrap">
-              {player.country && (
-                <div className="w-6 h-6 rounded-full overflow-hidden border border-zinc-300 shadow-sm shrink-0">
-                  <img
-                    src={`/banderas/${player.country.toLowerCase().replace(' ', '-')}.png`}
-                    alt={player.country}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
               <span className="font-sans text-sm font-black uppercase tracking-widest text-[#2c2c2c]">
                 {player.club || 'SIN RED SOCIAL'}
               </span>
@@ -302,6 +372,38 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
                 name="socialNetwork"
                 defaultValue={player.club}
                 required
+                className="w-full px-4 py-3 bg-white border border-zinc-300 rounded-xl focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none text-[#1a1a1a] font-medium transition-colors"
+                disabled={isPending}
+              />
+            </div>
+
+            {/* Instagram/Social URL 1 */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="instagramUrl" className="text-xs font-black uppercase tracking-widest text-zinc-600">
+                Enlace de Red Social 1 (Opcional)
+              </label>
+              <input
+                type="url"
+                id="instagramUrl"
+                name="instagramUrl"
+                defaultValue={player.instagramUrl || ''}
+                placeholder="Ej. https://www.instagram.com/nombre, o TikTok, Twitch..."
+                className="w-full px-4 py-3 bg-white border border-zinc-300 rounded-xl focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none text-[#1a1a1a] font-medium transition-colors"
+                disabled={isPending}
+              />
+            </div>
+
+            {/* YouTube/Social URL 2 */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="youtubeUrl" className="text-xs font-black uppercase tracking-widest text-zinc-600">
+                Enlace de Red Social 2 (Opcional)
+              </label>
+              <input
+                type="url"
+                id="youtubeUrl"
+                name="youtubeUrl"
+                defaultValue={player.youtubeUrl || ''}
+                placeholder="Ej. https://www.youtube.com/@nombre, o TikTok, Twitch..."
                 className="w-full px-4 py-3 bg-white border border-zinc-300 rounded-xl focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none text-[#1a1a1a] font-medium transition-colors"
                 disabled={isPending}
               />

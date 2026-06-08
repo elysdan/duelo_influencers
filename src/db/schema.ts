@@ -142,6 +142,8 @@ export const players = pgTable('players', {
   clips: jsonb('clips').$type<{ id: string; title: string; thumbnailUrl: string }[]>(),
   videoUrl: text('video_url'),
   country: text('country'),
+  instagramUrl: text('instagram_url'),
+  youtubeUrl: text('youtube_url'),
 })
 
 // ─── Player Hypes ─────────────────────────────────────────────────────────────

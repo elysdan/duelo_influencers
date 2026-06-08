@@ -32,6 +32,9 @@ export async function createInfluencer(prevState: any, formData: FormData) {
   const numberStr = formData.get('number') as string | null
   const country = formData.get('country') as string | null
   const imageFile = formData.get('imageFile') as File | null
+  const instagramUrl = formData.get('instagramUrl') as string | null
+  const youtubeUrl = formData.get('youtubeUrl') as string | null
+
 
   if (!name || name.trim().length === 0) {
     return { error: 'El nombre del influencer es obligatorio' }
@@ -104,6 +107,8 @@ export async function createInfluencer(prevState: any, formData: FormData) {
       caps: 0,
       hypeCount: 0,
       country: country?.trim() || null,
+      instagramUrl: instagramUrl?.trim() || null,
+      youtubeUrl: youtubeUrl?.trim() || null,
     })
 
     revalidatePath('/influencers')
@@ -140,6 +145,8 @@ export async function updateInfluencer(playerId: string, prevState: any, formDat
   const gender = formData.get('gender') as string | null
   const country = formData.get('country') as string | null
   const imageFile = formData.get('imageFile') as File | null
+  const instagramUrl = formData.get('instagramUrl') as string | null
+  const youtubeUrl = formData.get('youtubeUrl') as string | null
 
   if (!name || name.trim().length === 0) {
     return { error: 'El nombre del influencer es obligatorio' }
@@ -183,6 +190,8 @@ export async function updateInfluencer(playerId: string, prevState: any, formDat
       age: age !== null && !isNaN(age) ? age : null,
       gender: gender?.trim() || null,
       country: country?.trim() || null,
+      instagramUrl: instagramUrl?.trim() || null,
+      youtubeUrl: youtubeUrl?.trim() || null,
     }
 
     if (position) {

@@ -48,6 +48,8 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       clips: players.clips,
       videoUrl: players.videoUrl,
       country: players.country,
+      instagramUrl: players.instagramUrl,
+      youtubeUrl: players.youtubeUrl,
       hasHyped: currentUserId
         ? sql<boolean>`CASE WHEN (SELECT 1 FROM player_hypes ph WHERE ph.player_id = ${players.id} AND ph.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_hyped')
         : sql<boolean>`false`.as('has_hyped')

@@ -138,6 +138,36 @@ export default function AdminInfluencersPage() {
             />
           </div>
 
+          {/* Instagram/Social URL 1 */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="instagramUrl" className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              Enlace de Red Social 1 (Opcional)
+            </label>
+            <input
+              type="url"
+              id="instagramUrl"
+              name="instagramUrl"
+              placeholder="Ej. https://www.instagram.com/nombre, o TikTok, Twitch..."
+              className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:border-yellow-500/50 focus:outline-none text-white transition-colors"
+              disabled={isPending}
+            />
+          </div>
+
+          {/* YouTube/Social URL 2 */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="youtubeUrl" className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              Enlace de Red Social 2 (Opcional)
+            </label>
+            <input
+              type="url"
+              id="youtubeUrl"
+              name="youtubeUrl"
+              placeholder="Ej. https://www.youtube.com/@nombre, o TikTok, Twitch..."
+              className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:border-yellow-500/50 focus:outline-none text-white transition-colors"
+              disabled={isPending}
+            />
+          </div>
+
           {/* País */}
           <div className="flex flex-col gap-2">
             <label htmlFor="country" className="text-xs font-bold uppercase tracking-widest text-gray-400">
@@ -147,10 +177,11 @@ export default function AdminInfluencersPage() {
               id="country"
               name="country"
               required
+              defaultValue=""
               className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:border-yellow-500/50 focus:outline-none text-white transition-colors"
               disabled={isPending}
             >
-              <option value="" disabled selected className="bg-zinc-900 text-gray-400">Selecciona un país</option>
+              <option value="" disabled className="bg-zinc-900 text-gray-400">Selecciona un país</option>
               {COUNTRIES.map((c) => (
                 <option key={c.value} value={c.value} className="bg-zinc-900 text-white">
                   {c.label}
