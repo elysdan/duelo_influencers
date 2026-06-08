@@ -58,7 +58,7 @@ export const users = pgTable('users', {
   addressCountry: text('address_country'),
   addressState: text('address_state'),
   addressCity: text('address_city'),
-  gender: userGenderEnum('gender'),
+  gender: text('gender'),
   role: userRoleEnum('role').default('USER').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })

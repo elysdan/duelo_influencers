@@ -67,14 +67,14 @@ export default async function ProfilePage() {
     <>
       <Navbar userName={userDb.name} />
 
-      <main className="min-h-screen bg-[#0a0a0a] bg-[url('/bg-pattern.svg')] text-white pt-24 pb-12">
+      <main className="min-h-screen pt-24 pb-12" style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <header className="mb-10 text-center sm:text-left">
             <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight drop-shadow-lg" style={{ color: 'var(--yellow)' }}>
               MI PERFIL
             </h1>
-            <p className="text-gray-300 text-lg max-w-2xl">
+            <p className="text-lg max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
               Sube de nivel tu presencia en la comunidad. Sube tu foto, elige tu avatar y personaliza cómo te verán los demás usuarios.
             </p>
           </header>

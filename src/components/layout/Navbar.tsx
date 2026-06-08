@@ -86,7 +86,7 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                         border: '1px solid var(--border)',
                       }}
                     >
-                      Salir
+                      Cerrar sesión
                     </button>
                   </form>
                 </div>

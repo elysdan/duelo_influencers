@@ -320,7 +320,7 @@ export default function SmartPlayer({ episode, isAdmin }: { episode: Episode; is
             {episode.description}
           </p>
 
-          {/* External Traffic Button */}
+          {/*{ External Traffic Button }
           {provider !== 'failed' && (
             <a
               href={
@@ -337,7 +337,7 @@ export default function SmartPlayer({ episode, isAdmin }: { episode: Episode; is
               <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
               Ver en {provider === 'youtube' ? 'YouTube' : provider === 'vimeo' ? 'Vimeo' : 'DailyMotion'}
             </a>
-          )}
+          )*/}
         </div>
 
         {/* Live Router Monitor */}

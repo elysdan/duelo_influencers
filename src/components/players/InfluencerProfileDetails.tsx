@@ -162,9 +162,9 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
         <div className="grid grid-cols-1 md:grid-cols-[330px_1fr] gap-10 items-start">
 
           {/* Left Column: Portrait Card */}
-          <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl w-full max-w-[330px] mx-auto flex flex-col gap-4 border-4 border-[#3b82f6]">
+          <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl w-full max-w-[330px] mx-auto flex flex-col gap-4">
             {/* Portrait Image Frame */}
-            <div className="border-2 border-[#f5c518] rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative">
+            <div className="rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative">
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -232,9 +232,9 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-[330px_1fr] gap-10 items-start">
 
           {/* Left Column: Portrait Card Edit */}
-          <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl w-full max-w-[330px] mx-auto flex flex-col gap-4 border-4 border-[#3b82f6]">
+          <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl w-full max-w-[330px] mx-auto flex flex-col gap-4">
             {/* Portrait Image Frame / Upload Preview */}
-            <div className="border-2 border-[#f5c518] rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative group">
+            <div className="rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative group">
               {imagePreview ? (
                 <img
                   src={imagePreview}

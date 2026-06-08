@@ -30,7 +30,7 @@ export default function ProfileForm({
   initialAddressCountry?: string | null
   initialAddressState?: string | null
   initialAddressCity?: string | null
-  initialGender?: 'MASCULINO' | 'FEMENINO' | 'OTROS' | null
+  initialGender?: string | null
   availableAvatars: string[]
   updateAction: (formData: FormData) => Promise<{ error?: string; success?: string }>
   deleteAction: (url: string) => Promise<{ error?: string; success?: string }>
@@ -141,13 +141,13 @@ export default function ProfileForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 bg-black/40 border border-white/10 rounded-2xl p-6 sm:p-8 relative overflow-hidden backdrop-blur-md">
+    <form onSubmit={handleSubmit} className="space-y-8 glass-card p-6 sm:p-8 relative overflow-hidden backdrop-blur-md">
       
       {/* Decorative gradient */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--yellow)]/10 rounded-full blur-[80px] pointer-events-none" />
 
       {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 ${message.type === 'success' ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'}`}>
+        <div className={`p-4 rounded-xl flex items-center gap-3 ${message.type === 'success' ? 'bg-green-500/20 text-green-700 border border-green-500/30' : 'bg-red-500/20 text-red-700 border border-red-500/30'}`}>
           {message.type === 'success' && <CheckCircle2 className="w-5 h-5 flex-shrink-0" />}
           <p className="text-sm font-medium">{message.text}</p>
         </div>
@@ -155,13 +155,13 @@ export default function ProfileForm({
 
       {/* Profile Picture Upload */}
       <div className="space-y-3">
-        <label className="block text-sm font-bold text-white/80">Foto de Perfil</label>
+        <label className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Foto de Perfil</label>
         <div className="flex items-center gap-4">
-          <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-white/20 bg-black/40">
+          <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 bg-[var(--bg-elevated)]" style={{ borderColor: 'var(--border)' }}>
             {picturePreview ? (
               <img src={picturePreview} alt="Foto de perfil" className="w-full h-full object-cover" />
             ) : (
-              <div className="flex items-center justify-center w-full h-full text-gray-500">
+              <div className="flex items-center justify-center w-full h-full text-gray-400">
                 <User className="w-10 h-10" />
               </div>
             )}
@@ -170,7 +170,12 @@ export default function ProfileForm({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-medium text-white transition-colors flex items-center gap-2"
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 hover:opacity-90 cursor-pointer"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
             >
               <Upload className="w-4 h-4" />
               Subir Foto
@@ -182,7 +187,7 @@ export default function ProfileForm({
                   setPicturePreview(null)
                   if (fileInputRef.current) fileInputRef.current.value = ''
                 }}
-                className="px-4 py-2 hover:bg-black/40 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 w-max"
+                className="px-4 py-2 hover:bg-red-500/10 rounded-lg text-sm font-medium text-red-500 transition-colors flex items-center gap-2 w-max cursor-pointer"
               >
                 <X className="w-4 h-4" />
                 Eliminar Foto
@@ -201,7 +206,7 @@ export default function ProfileForm({
 
       {/* Name section */}
       <div className="space-y-3">
-        <label htmlFor="name" className="block text-sm font-bold text-white/80">
+        <label htmlFor="name" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>
           Tu Nombre
         </label>
         <div className="relative">
@@ -213,86 +218,178 @@ export default function ProfileForm({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors"
+            className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+            style={{
+              background: 'var(--bg-elevated)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-primary)',
+            }}
             placeholder="Escribe tu nombre visible"
             required
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
         {/* Full Name */}
         <div className="space-y-3">
-          <label htmlFor="fullName" className="block text-sm font-bold text-white/80">Nombre Completo</label>
+          <label htmlFor="fullName" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Nombre Completo</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><User className="h-5 w-5 text-gray-400" /></div>
-            <input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="Tus nombres y apellidos" />
+            <input 
+              id="fullName" 
+              type="text" 
+              value={fullName} 
+              onChange={(e) => setFullName(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="Tus nombres y apellidos" 
+            />
           </div>
         </div>
 
         {/* Birth Date */}
         <div className="space-y-3">
-          <label htmlFor="birthDate" className="block text-sm font-bold text-white/80">Fecha de Nacimiento</label>
+          <label htmlFor="birthDate" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Fecha de Nacimiento</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Calendar className="h-5 w-5 text-gray-400" /></div>
-            <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors [color-scheme:dark]" />
+            <input 
+              id="birthDate" 
+              type="date" 
+              value={birthDate} 
+              onChange={(e) => setBirthDate(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+            />
           </div>
         </div>
 
         {/* Phone */}
         <div className="space-y-3">
-          <label htmlFor="phone" className="block text-sm font-bold text-white/80">Teléfono (opcional)</label>
+          <label htmlFor="phone" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Teléfono (opcional)</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Phone className="h-5 w-5 text-gray-400" /></div>
-            <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="+57 300 000 0000" />
+            <input 
+              id="phone" 
+              type="tel" 
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="+57 300 000 0000" 
+            />
           </div>
         </div>
 
         {/* Alt Email */}
         <div className="space-y-3">
-          <label htmlFor="altEmail" className="block text-sm font-bold text-white/80">Correo Electrónico Alternativo</label>
+          <label htmlFor="altEmail" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Correo Electrónico Alternativo</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Mail className="h-5 w-5 text-gray-400" /></div>
-            <input id="altEmail" type="email" value={altEmail} onChange={(e) => setAltEmail(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="tu_otro_correo@ejemplo.com" />
+            <input 
+              id="altEmail" 
+              type="email" 
+              value={altEmail} 
+              onChange={(e) => setAltEmail(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="tu_otro_correo@ejemplo.com" 
+            />
           </div>
         </div>
 
         {/* Gender */}
         <div className="space-y-3">
-          <label htmlFor="gender" className="block text-sm font-bold text-white/80">Género</label>
+          <label htmlFor="gender" className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Género</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Users className="h-5 w-5 text-gray-400" /></div>
-            <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors appearance-none">
-              <option value="">Prefiero no decirlo</option>
-              <option value="MASCULINO">Masculino</option>
-              <option value="FEMENINO">Femenino</option>
-              <option value="OTROS">Otros</option>
-            </select>
+            <input 
+              id="gender" 
+              type="text" 
+              value={gender} 
+              onChange={(e) => setGender(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="Ej: Masculino, Femenino, Otro..."
+            />
           </div>
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="block text-sm font-bold text-white/80">Dirección Residencial</label>
+      <div className="space-y-3 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+        <label className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>Dirección Residencial</label>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
-            <input type="text" value={addressCountry} onChange={(e) => setAddressCountry(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="País" />
+            <input 
+              type="text" 
+              value={addressCountry} 
+              onChange={(e) => setAddressCountry(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="País" 
+            />
           </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
-            <input type="text" value={addressState} onChange={(e) => setAddressState(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="Estado / Depto" />
+            <input 
+              type="text" 
+              value={addressState} 
+              onChange={(e) => setAddressState(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="Estado / Depto" 
+            />
           </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
-            <input type="text" value={addressCity} onChange={(e) => setAddressCity(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="Ciudad" />
+            <input 
+              type="text" 
+              value={addressCity} 
+              onChange={(e) => setAddressCity(e.target.value)} 
+              className="block w-full pl-11 pr-4 py-3 rounded-xl outline-none transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
+              }}
+              placeholder="Ciudad" 
+            />
           </div>
         </div>
       </div>
 
       {/* Avatars section */}
-      <div className="space-y-4 pt-4 border-t border-white/10">
-        <label className="block text-sm font-bold text-white/80">
+      <div className="space-y-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+        <label className="block text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>
           Elige tu Avatar del Show
         </label>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -306,7 +403,8 @@ export default function ProfileForm({
                 <button
                   type="button"
                   onClick={() => setAvatarUrl(url)}
-                  className={`relative w-full aspect-square rounded-2xl overflow-hidden transition-all duration-200 border-2 ${isSelected ? 'border-[var(--yellow)] scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]' : 'border-white/10 hover:border-white/30 hover:scale-105'} ${isBeingDeleted ? 'opacity-50' : ''}`}
+                  className={`relative w-full aspect-square rounded-2xl overflow-hidden transition-all duration-200 border-2 cursor-pointer ${isSelected ? 'border-[var(--yellow)] scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]' : 'hover:scale-105'}`}
+                  style={{ borderColor: isSelected ? 'var(--yellow)' : 'var(--border)' }}
                 >
                   <img
                     src={url}
@@ -328,7 +426,7 @@ export default function ProfileForm({
                     onClick={(e) => handleDeleteAvatar(e, url)}
                     title="Eliminar foto"
                     disabled={isBeingDeleted}
-                    className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 disabled:opacity-50"
+                    className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 disabled:opacity-50 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -337,7 +435,7 @@ export default function ProfileForm({
             )
           })}
         </div>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
            Puedes seleccionar uno de nuestros avatares exclusivos o dejarlo vacío.
         </p>
       </div>
@@ -345,7 +443,7 @@ export default function ProfileForm({
       <button
         type="submit"
         disabled={loading || !name.trim()}
-        className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
+        className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 cursor-pointer"
         style={{ background: 'var(--yellow)', color: '#000' }}
       >
         {loading ? (

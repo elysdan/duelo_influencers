@@ -103,7 +103,7 @@ export async function updateProfile(formData: FormData) {
   const addressCountry = formData.get('addressCountry') as string | null
   const addressState = formData.get('addressState') as string | null
   const addressCity = formData.get('addressCity') as string | null
-  const gender = formData.get('gender') as 'MASCULINO' | 'FEMENINO' | 'OTROS' | '' | null
+  const gender = formData.get('gender') as string | null
 
   let parsedBirthDate: Date | null = null
   if (birthDateStr) {
@@ -132,7 +132,7 @@ export async function updateProfile(formData: FormData) {
         addressCountry: addressCountry?.trim() || null,
         addressState: addressState?.trim() || null,
         addressCity: addressCity?.trim() || null,
-        gender: gender ? (gender as 'MASCULINO' | 'FEMENINO' | 'OTROS') : null,
+        gender: gender?.trim() || null,
       })
       .where(eq(users.id, session.user.id))
 
