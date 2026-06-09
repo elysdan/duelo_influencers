@@ -2,7 +2,7 @@
 
 import { useState, useRef, useTransition } from 'react'
 import { PlusCircle, Upload, CheckCircle, AlertCircle, Sparkles, UserCheck, Terminal, Image as ImageIcon } from 'lucide-react'
-import { addBlogPost, seedBlogPosts } from '@/app/blog/actions'
+import { addBlogPost, seedBlogPosts } from '@/app/comunidad/actions'
 
 export default function AdminBlogConsole({ 
   isDev,
@@ -283,7 +283,7 @@ export default function AdminBlogConsole({
                     </>
                   ) : (
                     <>
-                      <PlusCircle className="w-4 h-4" /> Publicar Artículo en el Blog
+                      <PlusCircle className="w-4 h-4" /> Publicar Artículo en la Comunidad
                     </>
                   )}
                 </button>

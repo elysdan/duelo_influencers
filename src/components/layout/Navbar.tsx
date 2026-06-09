@@ -2,14 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Menu, X, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOutAction } from '@/app/actions'
 const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/episodios', label: 'Episodios' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/comunidad', label: 'Comunidad' },
   { href: '/clasificacion', label: 'Clasificación' },
   { href: '/influencers', label: 'Influencers' },
   { href: '/juegos', label: 'Juegos' },
@@ -19,6 +19,21 @@ export default function Navbar({ userName }: { userName?: string | null }) {
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [userImage, setUserImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (userName) {
+      fetch('/api/auth/session')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.user?.image) {
+            setUserImage(data.user.image)
+          }
+        })
+        .catch((err) => console.error('Error fetching session:', err))
+    }
+  }, [userName])
 
   const handleOpenLogin = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -79,34 +94,76 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                   {link.label}
                 </Link>
               ))}
+              <a
+                href="https://micasino.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 px-4.5 py-1.5 bg-[#4b4b50] hover:bg-[#57575c] active:scale-[0.98] rounded-full text-sm font-extrabold tracking-wide transition-all duration-200 flex items-center gap-0.5 select-none"
+              >
+                <span className="text-[#f5c518]">mi</span>
+                <span className="text-white">casino</span>
+              </a>
             </nav>
 
             {/* Auth buttons */}
             <div className="hidden md:flex items-center gap-3">
               {userName ? (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    Hola, <strong style={{ color: 'var(--yellow)' }}>{userName.split(' ')[0]}</strong>
-                  </span>
-                  <Link
-                    href="/perfil"
-                    className="text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:text-white"
-                    style={{ color: 'var(--text-secondary)', border: '1px solid var(--border)' }}
+                <div className="relative">
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-white/5 transition-all duration-200 cursor-pointer text-left"
                   >
-                    Perfil
-                  </Link>
-                  <form action={signOutAction}>
-                    <button
-                      type="submit"
-                      className="text-sm px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-white/5 hover:text-white"
-                      style={{
-                        color: 'var(--text-muted)',
-                        border: '1px solid var(--border)',
-                      }}
-                    >
-                      Cerrar sesión
-                    </button>
-                  </form>
+                    <span className="text-sm font-medium text-white select-none">
+                      {userName.split(' ')[0]}
+                    </span>
+                    {userImage ? (
+                      <img
+                        src={userImage}
+                        alt={userName}
+                        className="w-8 h-8 rounded-full object-cover border border-[#f5c518]/60"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-yellow-500/20 text-[#f5c518] flex items-center justify-center font-bold text-xs border border-[#f5c518]/60 uppercase select-none">
+                        {userName.charAt(0)}
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <>
+                      {/* Click outside backdrop */}
+                      <div
+                        className="fixed inset-0 z-30"
+                        onClick={() => setDropdownOpen(false)}
+                      />
+                      <div
+                        className="absolute right-0 mt-2 w-48 rounded-xl border border-white/10 bg-[#0b0e14] py-1.5 shadow-2xl z-40"
+                        style={{
+                          backdropFilter: 'blur(20px)',
+                          WebkitBackdropFilter: 'blur(20px)',
+                          background: 'rgba(11,14,20,0.95)'
+                        }}
+                      >
+                        <Link
+                          href="/perfil"
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex w-full items-center px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          Mi Perfil
+                        </Link>
+                        <div className="h-px bg-white/5 my-1" />
+                        <form action={signOutAction}>
+                          <button
+                            type="submit"
+                            className="flex w-full items-center px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors cursor-pointer text-left font-medium"
+                          >
+                            Cerrar sesión
+                          </button>
+                        </form>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
                 <>
@@ -151,6 +208,24 @@ export default function Navbar({ userName }: { userName?: string | null }) {
             className="md:hidden px-4 pb-4 flex flex-col gap-2"
             style={{ borderTop: '1px solid var(--border)' }}
           >
+            {userName && (
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
+                {userImage ? (
+                  <img
+                    src={userImage}
+                    alt={userName}
+                    className="w-9 h-9 rounded-full object-cover border border-[#f5c518]/60"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-yellow-500/20 text-[#f5c518] flex items-center justify-center font-bold text-sm border border-[#f5c518]/60 uppercase">
+                    {userName.charAt(0)}
+                  </div>
+                )}
+                <span className="text-sm font-medium text-white">
+                  Hola, {userName.split(' ')[0]}
+                </span>
+              </div>
+            )}
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -165,6 +240,16 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                 {link.label}
               </Link>
             ))}
+            <a
+              href="https://micasino.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className="mt-1 px-4 py-3 rounded-lg text-sm font-extrabold tracking-wide transition-all duration-200 flex items-center gap-0.5 bg-white/5 hover:bg-white/10 active:scale-[0.98] select-none"
+            >
+              <span className="text-[#f5c518]">mi</span>
+              <span className="text-white">casino</span>
+            </a>
             <div className="flex gap-2 pt-2">
               {userName ? (
                 <>

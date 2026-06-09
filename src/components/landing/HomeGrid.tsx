@@ -122,7 +122,7 @@ export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGr
                 return (
                   <Link
                     key={post.id}
-                    href={`/blog/${post.slug}`}
+                    href={`/comunidad/${post.slug}`}
                     className="group flex flex-col gap-5 bg-[#0b0e14]/20 border border-white/5 rounded-3xl p-5 hover:bg-[#0b0e14]/40 hover:border-yellow-500/20 transition-all duration-300 shadow-lg cursor-pointer"
                   >
                     {/* Aspect ratio video layout container showing full styled thumbnail */}

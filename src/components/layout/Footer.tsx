@@ -34,7 +34,7 @@ export default function Footer() {
               {[
                 { href: '/', label: 'Inicio' },
                 { href: '/episodios', label: 'Episodios' },
-                { href: '/blog', label: 'Blog' },
+                { href: '/comunidad', label: 'Comunidad' },
                 { href: '/clasificacion', label: 'Clasificación' },
                 { href: '/influencers', label: 'Influencers' },
                 { href: '/juegos', label: 'Juegos' },

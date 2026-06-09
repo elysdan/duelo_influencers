@@ -2,7 +2,7 @@
 
 import { useState, useRef, useTransition } from 'react'
 import { Edit2, Trash2, Upload, CheckCircle, AlertCircle, RefreshCw, X, ShieldAlert } from 'lucide-react'
-import { editBlogPost, deleteBlogPost } from '@/app/blog/actions'
+import { editBlogPost, deleteBlogPost } from '@/app/comunidad/actions'
 
 interface BlogPost {
   id: string
@@ -87,7 +87,7 @@ export default function AdminBlogActions({
         
         // Redirect to new slug page if slug changed to prevent 404
         if (res.newSlug && res.newSlug !== post.slug) {
-          window.location.href = `/blog/${res.newSlug}`
+          window.location.href = `/comunidad/${res.newSlug}`
         } else {
           // reload the page to refresh server components
           window.location.reload()
@@ -105,7 +105,7 @@ export default function AdminBlogActions({
       if (res.success) {
         setMessage({ type: 'success', text: res.success })
         setTimeout(() => {
-          window.location.href = '/blog'
+          window.location.href = '/comunidad'
         }, 1200)
       } else if (res.error) {
         setMessage({ type: 'error', text: res.error })

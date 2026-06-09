@@ -92,10 +92,10 @@ export default function EditableClasificacion({
   }
 
   return (
-    <div className="max-w-[95%] sm:max-w-[90%] xl:max-w-[1200px] mx-auto flex flex-col gap-8 items-center">
+    <div className="max-w-[95%] sm:max-w-[90%] xl:max-w-[1200px] mx-auto flex flex-col gap-8 items-center keep-text-white">
       
       {/* Title Image */}
-      <div className="flex justify-center mb-6 select-none pointer-events-none">
+      <div className="flex justify-center mb-10 select-none pointer-events-none">
         <img 
           src="/titulo_clasificacion.png" 
           alt="Clasificación" 

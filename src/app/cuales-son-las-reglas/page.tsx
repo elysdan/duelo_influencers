@@ -94,7 +94,7 @@ export default async function ReglasDelShowPage() {
                     El Veredicto y Voto de la Comunidad
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-400 leading-relaxed text-justify">
-                    El público de Micasino tiene el poder absoluto. En la pestaña de la [Comunidad](/comunidad), los espectadores proponen, debaten y votan cuáles serán las penitencias extremas que se aplicarán al influencer perdedor del duelo en los capítulos siguientes.
+                    El público de Micasino tiene el poder absoluto. En la pestaña del [Foro](/foro), los espectadores proponen, debaten y votan cuáles serán las penitencias extremas que se aplicarán al influencer perdedor del duelo en los capítulos siguientes.
                   </p>
                 </div>
               </div>
@@ -152,10 +152,10 @@ export default async function ReglasDelShowPage() {
             </div>
 
             <Link
-              href="/comunidad"
+              href="/foro"
               className="w-full sm:w-auto px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_12px_rgba(245,197,24,0.2)] hover:shadow-[0_4px_20px_rgba(245,197,24,0.35)] flex items-center justify-center gap-2 group"
             >
-              Ir a la Comunidad
+              Ir al Foro
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

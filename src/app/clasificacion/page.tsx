@@ -43,7 +43,7 @@ export default async function ClasificacionPage() {
       
       <Navbar userName={session?.user?.name} />
 
-      <main className="flex-grow pt-32 pb-24 px-4 sm:px-6 lg:px-8 relative z-10">
+      <main className="flex-grow pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative z-10">
         <EditableClasificacion 
           isAdmin={isAdmin}
           initialTablaDePaisesUrl={tablaDePaisesUrl}
