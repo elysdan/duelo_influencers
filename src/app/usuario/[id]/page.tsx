@@ -98,7 +98,7 @@ export default async function UserWallPage({
     } else if (c.newsId) {
       contextLabel = 'Noticias'
     } else {
-      contextLabel = 'Foro'
+      contextLabel = 'Comunidad'
     }
 
     if (c.parentId) {
@@ -148,12 +148,12 @@ export default async function UserWallPage({
         <div className="max-w-2xl mx-auto relative z-10">
 
           <Link
-            href="/foro"
+            href="/comunidad"
             className="inline-flex items-center gap-2 text-sm mb-8 transition-colors hover:text-white"
             style={{ color: 'var(--text-muted)' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Volver al Foro
+            Volver a la Comunidad
           </Link>
 
           {/* Profile Header */}

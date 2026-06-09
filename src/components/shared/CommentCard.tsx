@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import { Heart, Repeat2, MessageSquare, Send, CornerDownRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toggleCommentLike } from '@/app/actions/likes'
@@ -40,6 +41,7 @@ interface CommentCardProps {
   initialRepliesCount?: number
   contextLabel?: React.ReactNode
   isReply?: boolean
+  isLoggedIn?: boolean
 }
 
 export default function CommentCard({
@@ -56,7 +58,16 @@ export default function CommentCard({
   initialRepliesCount = 0,
   contextLabel,
   isReply = false,
+  isLoggedIn = false,
 }: CommentCardProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const handleAuthRedirect = () => {
+    const params = new URLSearchParams(window.location.search)
+    params.set('login', 'true')
+    router.push(`${pathname}?${params.toString()}`)
+  }
   const [likesCount, setLikesCount] = useState(initialLikesCount || 0)
   const [hasLiked, setHasLiked] = useState(initialHasLiked)
   const [isLikePending, setIsLikePending] = useState(false)
@@ -80,6 +91,10 @@ export default function CommentCard({
   const displayName = authorName || 'Fan de la Tri'
 
   const handleLike = async () => {
+    if (!isLoggedIn) {
+      handleAuthRedirect()
+      return
+    }
     const prevHasLiked = hasLiked
     const prevCount = likesCount
 
@@ -99,6 +114,10 @@ export default function CommentCard({
   }
 
   const handleRepost = async () => {
+    if (!isLoggedIn) {
+      handleAuthRedirect()
+      return
+    }
     const prevHasReposted = hasReposted
     const prevCount = repostsCount
 
@@ -231,10 +250,20 @@ export default function CommentCard({
           </button>
 
            {/* Reply */}
-           <button onClick={() => setIsReplying(!isReplying)} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm", isReplying ? "bg-[var(--yellow)]/10 text-[var(--yellow)] shadow-[0_0_10px_rgba(255,204,0,0.2)] border border-[var(--yellow)]/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-[var(--yellow)]")} title="Responder">
-             <MessageSquare className={cn("w-4 h-4 transition-transform", isReplying && "scale-110 fill-current/20")} />
-             {repliesCount > 0 && <span className="font-mono font-bold leading-none">{repliesCount}</span>}
-          </button>
+           <button 
+              onClick={() => {
+                if (!isLoggedIn) {
+                  handleAuthRedirect()
+                  return
+                }
+                setIsReplying(!isReplying)
+              }} 
+              className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm", isReplying ? "bg-[var(--yellow)]/10 text-[var(--yellow)] shadow-[0_0_10px_rgba(255,204,0,0.2)] border border-[var(--yellow)]/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-[var(--yellow)]")} 
+              title="Responder"
+            >
+              <MessageSquare className={cn("w-4 h-4 transition-transform", isReplying && "scale-110 fill-current/20")} />
+              {repliesCount > 0 && <span className="font-mono font-bold leading-none">{repliesCount}</span>}
+           </button>
         </div>
       </div>
 
@@ -287,6 +316,7 @@ export default function CommentCard({
                      initialHasLiked={reply.hasLiked}
                      initialHasReposted={reply.hasReposted}
                      isReply={true}
+                     isLoggedIn={isLoggedIn}
                    />
                 ))}
                 

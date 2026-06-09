@@ -137,10 +137,10 @@ export default async function QueEsTvShowPage() {
               </Link>
               
               <Link
-                href="/foro"
+                href="/comunidad"
                 className="px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/5 hover:border-transparent text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center gap-2"
               >
-                <MessageSquare className="w-4 h-4" /> Unirse al Foro
+                <MessageSquare className="w-4 h-4" /> Unirse a la Comunidad
               </Link>
 
               <Link

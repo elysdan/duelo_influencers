@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import VideoPlayer from '@/components/landing/VideoPlayer'
 import Link from 'next/link'
-import { Flame } from 'lucide-react'
+import { Flame, Heart, MessageSquare, User } from 'lucide-react'
 
 interface NewsItem {
   id: string
@@ -23,24 +23,24 @@ interface PlayerItem {
   club: string
 }
 
-interface BlogPostItem {
+interface CommunityPostItem {
   id: string
-  title: string
-  slug: string
-  imageUrl: string
-  author: string
-  publishedAt: Date
-  caption: string | null
   content: string
-  category: string
-  readTime: string
   createdAt: Date
+  authorName: string | null
+  authorAvatar: string | null
+  playerImage: string | null
+  playerName: string | null
+  likesCount: number
+  repliesCount: number
+  mediaUrl?: string | null
+  mediaType?: string | null
 }
 
 interface HomeGridProps {
   news: NewsItem[]
   players: PlayerItem[]
-  blogPosts: BlogPostItem[]
+  communityPosts: CommunityPostItem[]
   user: {
     name?: string | null
     email?: string | null
@@ -49,7 +49,7 @@ interface HomeGridProps {
   } | null | undefined
 }
 
-export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGridProps) {
+export default function HomeGrid({ news, players, communityPosts = [], user }: HomeGridProps) {
   const videoSource = '/videos/COLETILLA DUELO DE INFLUENCER WEB 20SEG-DEF.mp4'
   const [isLivePlaying, setIsLivePlaying] = React.useState(false)
 
@@ -100,61 +100,99 @@ export default function HomeGrid({ news, players, blogPosts = [], user }: HomeGr
         <VideoPlayer src={videoSource} />
       </div>
 
-      {/* 2. Side-by-Side Content Grid (Left: 2 Vertical Blog Posts, Right: Live Stream & Stadium Trophy Banner) */}
+      {/* 2. Side-by-Side Content Grid (Left: 2 Vertical Community Posts, Right: Live Stream & Stadium Trophy Banner) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full text-left mt-4">
 
-        {/* Left Column: Vertical Stack of 2 Blog Articles (lg:col-span-7) */}
+        {/* Left Column: Vertical Stack of 2 Community Posts (lg:col-span-5) */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="flex items-center gap-3 border-b border-white/5 pb-3">
-            <Flame className="w-5 h-5 text-yellow-500 animate-pulse" />
-            <h2 className="text-base font-black uppercase tracking-wider text-white">Noticias del Blog</h2>
+          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+            <div className="flex items-center gap-3">
+              <Flame className="w-5 h-5 text-yellow-500 animate-pulse" />
+              <h2 className="text-base font-black uppercase tracking-wider text-white">Comunidad</h2>
+            </div>
+            <Link 
+              href="/comunidad" 
+              className="text-xs font-bold text-yellow-500 hover:text-yellow-400 transition-colors uppercase tracking-wider select-none"
+            >
+              Ver todo &rarr;
+            </Link>
           </div>
 
-          {blogPosts.length === 0 ? (
+          {communityPosts.length === 0 ? (
             <div className="glass-card rounded-3xl p-12 text-center border-dashed border-2 border-white/10 opacity-70">
-              <p className="text-xs text-gray-400">Aún no hay noticias cargadas en el blog.</p>
+              <p className="text-xs text-gray-400">Aún no hay publicaciones en la comunidad.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-8">
-              {blogPosts.slice(0, 2).map((post) => {
-                const isNew = new Date().getTime() - new Date(post.createdAt).getTime() < 1000 * 60 * 60 * 24 * 3
-
+            <div className="flex flex-col gap-6">
+              {communityPosts.map((post) => {
                 return (
                   <Link
                     key={post.id}
-                    href={`/comunidad/${post.slug}`}
-                    className="group flex flex-col gap-5 bg-[#0b0e14]/20 border border-white/5 rounded-3xl p-5 hover:bg-[#0b0e14]/40 hover:border-yellow-500/20 transition-all duration-300 shadow-lg cursor-pointer"
+                    href="/comunidad"
+                    className="group flex flex-col gap-4 bg-[#0b0e14]/20 border border-white/5 rounded-3xl p-5 hover:bg-[#0b0e14]/40 hover:border-yellow-500/20 transition-all duration-300 shadow-lg cursor-pointer"
                   >
-                    {/* Aspect ratio video layout container showing full styled thumbnail */}
-                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5">
-                      <img
-                        src={post.imageUrl}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 block"
-                        loading="lazy"
-                      />
+                    {/* Post Image or Video (Uploaded media or Fallback Influencer Image) */}
+                    {post.mediaUrl ? (
+                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5">
+                        {post.mediaType === 'video' ? (
+                          <video 
+                            src={post.mediaUrl} 
+                            className="w-full h-full object-cover block" 
+                            preload="metadata" 
+                          />
+                        ) : (
+                          <img
+                            src={post.mediaUrl}
+                            alt="Post media"
+                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 block"
+                            loading="lazy"
+                          />
+                        )}
+                      </div>
+                    ) : post.playerImage ? (
+                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5">
+                        <img
+                          src={post.playerImage}
+                          alt={post.playerName || 'Influencer'}
+                          className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 block"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : null}
 
-                      {/* Category Pill Tag */}
-                      <span className="absolute top-4 left-4 px-3 py-1 rounded bg-black/85 text-[9px] font-black uppercase tracking-widest text-gray-200 border border-white/10 select-none font-mono">
-                        {post.category}
-                      </span>
-
-                      {/* NUEVO Badge Overlay */}
-                      {isNew && (
-                        <span className="absolute bottom-4 right-4 px-3 py-1 rounded bg-red-600 text-[9px] font-black uppercase tracking-wider text-white shadow-md animate-pulse select-none font-bold">
-                          NUEVO
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Post Info text stacked vertically below */}
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-lg sm:text-xl font-black leading-snug text-gray-100 group-hover:text-yellow-500 transition-colors uppercase tracking-wide">
-                        {post.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-gray-400 leading-relaxed line-clamp-3">
-                        {post.caption || post.content}
+                    {/* Content */}
+                    <div className="flex flex-col gap-3">
+                      <p className="text-sm sm:text-base text-gray-100 font-bold leading-relaxed line-clamp-3">
+                        {post.content}
                       </p>
+
+                      {/* Author & Stats Row */}
+                      <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-1 text-left">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border border-white/10">
+                            {post.authorAvatar ? (
+                              <img src={post.authorAvatar} alt={post.authorName || 'User'} className="w-full h-full object-cover" />
+                            ) : (
+                              <User className="w-3.5 h-3.5 text-gray-400" />
+                            )}
+                          </div>
+                          <span className="text-xs font-bold text-gray-400 truncate max-w-[120px]">
+                            {post.authorName || 'Usuario'}
+                          </span>
+                        </div>
+
+                        {/* Likes & Comments */}
+                        <div className="flex items-center gap-4 text-gray-450 text-xs">
+                          <div className="flex items-center gap-1.5">
+                            <Heart className="w-4 h-4 text-gray-500" />
+                            <span className="font-mono font-bold">{post.likesCount}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <MessageSquare className="w-4 h-4 text-gray-500" />
+                            <span className="font-mono font-bold">{post.repliesCount}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </Link>
                 )

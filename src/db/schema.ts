@@ -172,6 +172,8 @@ export const comments = pgTable('comments', {
   likesCount: integer('likes_count').default(0).notNull(),
   repostsCount: integer('reposts_count').default(0).notNull(),
   repliesCount: integer('replies_count').default(0).notNull(),
+  mediaUrl: text('media_url'),
+  mediaType: text('media_type'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
