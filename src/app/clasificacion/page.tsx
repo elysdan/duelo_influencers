@@ -22,21 +22,18 @@ export default async function ClasificacionPage() {
     isAdmin = user?.role === 'ADMIN'
   }
 
-  // Fetch customizable image URLs from settings table
-  const [paisesSetting] = await db
-    .select({ value: systemSettings.value })
+  // Fetch all system settings to build a map of weekly/daily tables
+  const allSettings = await db
+    .select({ key: systemSettings.key, value: systemSettings.value })
     .from(systemSettings)
-    .where(eq(systemSettings.key, 'tabla_de_paises_url'))
-    .limit(1)
 
-  const [semanaSetting] = await db
-    .select({ value: systemSettings.value })
-    .from(systemSettings)
-    .where(eq(systemSettings.key, 'tabla_de_semana_url'))
-    .limit(1)
+  const settingsMap: Record<string, string> = {}
+  allSettings.forEach((setting) => {
+    settingsMap[setting.key] = setting.value
+  })
 
-  const tablaDePaisesUrl = paisesSetting?.value || '/TablaDePaises.png'
-  const tablaDeSemanaUrl = semanaSetting?.value || '/TablaDeSemana.png'
+  const tablaDePaisesUrl = settingsMap['tabla_de_paises_url'] || '/TablaDePaises.png'
+  const tablaDeSemanaUrl = settingsMap['tabla_de_semana_url'] || '/TablaDeSemana.png'
 
   return (
     <div className="flex flex-col min-h-screen bg-[#06070b] relative overflow-hidden">
@@ -51,6 +48,7 @@ export default async function ClasificacionPage() {
           isAdmin={isAdmin}
           initialTablaDePaisesUrl={tablaDePaisesUrl}
           initialTablaDeSemanaUrl={tablaDeSemanaUrl}
+          initialSettings={settingsMap}
         />
       </main>
 

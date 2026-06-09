@@ -23,11 +23,11 @@ interface GameDetailClientProps {
 export default function GameDetailClient({ game, isAdmin }: GameDetailClientProps) {
   const router = useRouter()
   const { toast } = useToast()
-  
+
   const [isEditing, setIsEditing] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  
+
   // Delete action states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [isDeletePending, setIsDeletePending] = useState(false)
@@ -97,13 +97,13 @@ export default function GameDetailClient({ game, isAdmin }: GameDetailClientProp
 
   return (
     <main className="flex-grow pt-32 pb-24 relative z-10">
-      
+
       {/* Centered Title Logo */}
       <div className="w-full flex justify-center mb-10 px-4">
-        <img 
-          src="/titulo_juegos.png" 
-          alt="Juegos" 
-          className="h-16 sm:h-20 md:h-24 lg:h-28 object-contain block drop-shadow-md" 
+        <img
+          src="/titulo_juegos.png"
+          alt="Juegos"
+          className="h-16 sm:h-20 md:h-24 lg:h-28 object-contain block drop-shadow-md"
         />
       </div>
 
@@ -147,33 +147,29 @@ export default function GameDetailClient({ game, isAdmin }: GameDetailClientProp
 
       {!isEditing ? (
         /* ====== VIEW MODE ====== */
-        <div className="w-full max-w-5xl mx-auto px-6 sm:px-12 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Column: Game vertical poster card */}
-          <div className="col-span-12 md:col-span-5 flex justify-center">
-            <div className="w-full max-w-[320px] aspect-[3/4.2] rounded-3xl overflow-hidden border border-zinc-200/80 bg-white p-2.5 shadow-xl flex flex-col gap-3">
-              
-              {/* Cover Image inside card */}
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-100 flex items-center justify-center">
-                {game.hasImage && game.imageUrl ? (
-                  <img 
-                    src={game.imageUrl} 
-                    alt={game.title} 
-                    className="w-full h-full object-cover rounded-xl block select-none pointer-events-none"
-                  />
-                ) : (
-                  <HelpCircle className="w-16 h-16 text-zinc-300 animate-pulse" />
-                )}
-              </div>
+        <div className="w-full max-w-5xl mx-auto px-6 sm:px-12 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
-              {/* Title under cover image */}
-              <div className="w-full py-1.5 flex items-center justify-center bg-white rounded-xl">
-                <span className="text-sm sm:text-base font-black text-center text-black uppercase tracking-wider leading-snug">
-                  {game.title}
-                </span>
-              </div>
-              
+          {/* Left Column: Game poster (borderless structure) */}
+          <div className="col-span-12 md:col-span-5 flex flex-col items-center gap-4">
+
+            {/* Cover Image */}
+            <div className="relative w-full max-w-[380px] aspect-[5/6] rounded-2xl overflow-hidden bg-zinc-100 flex items-center justify-center shadow-lg">
+              {game.hasImage && game.imageUrl ? (
+                <img
+                  src={game.imageUrl}
+                  alt={game.title}
+                  className="w-full h-full object-cover block select-none pointer-events-none"
+                />
+              ) : (
+                <HelpCircle className="w-16 h-16 text-zinc-300 animate-pulse" />
+              )}
             </div>
+
+            {/* Title under cover image */}
+            <h3 className="text-lg sm:text-xl font-black text-center text-black uppercase tracking-wider leading-snug font-sans">
+              {game.title}
+            </h3>
+
           </div>
 
           {/* Right Column: Rules and description text */}
@@ -181,7 +177,7 @@ export default function GameDetailClient({ game, isAdmin }: GameDetailClientProp
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-black uppercase tracking-wider select-none font-sans">
               REGLAS
             </h2>
-            <p className="text-base sm:text-lg text-zinc-800 leading-relaxed font-bold font-sans">
+            <p className="text-base sm:text-lg text-zinc-800 leading-relaxed font-sans">
               {rulesText}
             </p>
           </div>
@@ -189,51 +185,47 @@ export default function GameDetailClient({ game, isAdmin }: GameDetailClientProp
         </div>
       ) : (
         /* ====== EDIT MODE ====== */
-        <form onSubmit={handleSubmit} className="w-full max-w-5xl mx-auto px-6 sm:px-12 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Column: Game vertical poster card Edit */}
-          <div className="col-span-12 md:col-span-5 flex justify-center">
-            <div className="w-full max-w-[320px] aspect-[3/4.2] rounded-3xl overflow-hidden border border-zinc-200/80 bg-white p-2.5 shadow-xl flex flex-col gap-3">
-              
-              {/* Cover Image inside card with file selection overlay */}
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-100 flex items-center justify-center group">
-                {imagePreview ? (
-                  <img 
-                    src={imagePreview} 
-                    alt="Vista Previa" 
-                    className="w-full h-full object-cover rounded-xl block select-none pointer-events-none"
-                  />
-                ) : (
-                  <HelpCircle className="w-16 h-16 text-zinc-300" />
-                )}
+        <form onSubmit={handleSubmit} className="w-full max-w-5xl mx-auto px-6 sm:px-12 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
-                {/* File input overlay */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white p-4 text-center cursor-pointer rounded-2xl">
-                  <Upload className="w-6 h-6 text-yellow-500" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Cambiar Imagen</span>
-                  <span className="text-[10px] text-zinc-300 truncate max-w-full px-2">
-                    {fileName || 'Seleccionar archivo'}
-                  </span>
-                </div>
-                <input
-                  type="file"
-                  id="imageFile"
-                  name="imageFile"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  disabled={isPending}
+          {/* Left Column: Game poster Edit (borderless structure) */}
+          <div className="col-span-12 md:col-span-5 flex flex-col items-center gap-4">
+
+            {/* Cover Image inside card with file selection overlay */}
+            <div className="relative w-full max-w-[320px] aspect-[5/6] rounded-2xl overflow-hidden bg-zinc-100 flex items-center justify-center shadow-lg group">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Vista Previa"
+                  className="w-full h-full object-cover block select-none pointer-events-none"
                 />
-              </div>
+              ) : (
+                <HelpCircle className="w-16 h-16 text-zinc-300" />
+              )}
 
-              {/* Status/Format under cover image */}
-              <div className="w-full py-1.5 flex items-center justify-center bg-white rounded-xl">
-                <span className="text-[10px] font-bold text-center text-zinc-500 uppercase tracking-wider truncate px-2">
-                  {fileName ? `Archivo: ${fileName}` : 'Formatos: PNG, JPG, WEBP'}
+              {/* File input overlay */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white p-4 text-center cursor-pointer rounded-2xl">
+                <Upload className="w-6 h-6 text-yellow-500" />
+                <span className="text-xs font-bold uppercase tracking-widest">Cambiar Imagen</span>
+                <span className="text-[10px] text-zinc-300 truncate max-w-full px-2">
+                  {fileName || 'Seleccionar archivo'}
                 </span>
               </div>
-              
+              <input
+                type="file"
+                id="imageFile"
+                name="imageFile"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                disabled={isPending}
+              />
             </div>
+
+            {/* Status/Format under cover image */}
+            <div className="text-[10px] font-bold text-center text-zinc-500 uppercase tracking-wider truncate max-w-[320px] px-2 select-none">
+              {fileName ? `Archivo: ${fileName}` : 'Formatos: PNG, JPG, WEBP'}
+            </div>
+
           </div>
 
           {/* Right Column: Edit inputs */}

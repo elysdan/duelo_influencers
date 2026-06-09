@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const type = formData.get('type') as 'paises' | 'semana' | null
+    const week = formData.get('week') as string | null
+    const day = formData.get('day') as string | null
 
     if (!file || file.size === 0) {
       return NextResponse.json({ error: 'Archivo no proporcionado' }, { status: 400 })
@@ -43,13 +45,17 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadDir, { recursive: true })
 
     const ext = file.name.split('.').pop() || 'png'
-    const filename = `tabla-${type}-${Date.now()}.${ext}`
+    const filename = type === 'semana' && week && day
+      ? `tabla-${type}-w${week}-d${day}-${Date.now()}.${ext}`
+      : `tabla-${type}-${Date.now()}.${ext}`
     const filepath = path.join(uploadDir, filename)
 
     await writeFile(filepath, buffer)
     const fileUrl = `/api/uploads/classification/${filename}`
 
-    const settingKey = type === 'paises' ? 'tabla_de_paises_url' : 'tabla_de_semana_url'
+    const settingKey = type === 'paises'
+      ? 'tabla_de_paises_url'
+      : (week && day ? `tabla_semana_${week}_dia_${day}_url` : 'tabla_de_semana_url')
 
     // Upsert key in system_settings table
     const [existingSetting] = await db
