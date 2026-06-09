@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { Mail, User, Lock, X, Eye, EyeOff, Loader2, Check } from 'lucide-react'
+import { Mail, User, Lock, X, Eye, EyeOff, Loader2, Check, Phone, Contact } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { signIn } from 'next-auth/react'
 
@@ -30,7 +30,7 @@ function RegisterModalContent() {
   }, [isRegisterOpen, isLoginOpen])
 
   // --- Registration Form State ---
-  const [registerForm, setRegisterForm] = useState({ email: '', username: '', password: '' })
+  const [registerForm, setRegisterForm] = useState({ fullName: '', email: '', phone: '', username: '', password: '' })
   const [registerAcceptedTerms, setRegisterAcceptedTerms] = useState(false)
   const [registerLoading, setRegisterLoading] = useState(false)
   const [registerError, setRegisterError] = useState('')
@@ -45,7 +45,7 @@ function RegisterModalContent() {
   // Reset registration form when view switches
   useEffect(() => {
     if (localView === 'register') {
-      setRegisterForm({ email: '', username: '', password: '' })
+      setRegisterForm({ fullName: '', email: '', phone: '', username: '', password: '' })
       setRegisterAcceptedTerms(false)
       setRegisterError('')
       setShowRegisterPass(false)
@@ -94,10 +94,23 @@ function RegisterModalContent() {
     setRegisterError('')
 
     // Client-side validations
+    // 0.5 Name and Last Name format
+    if (!registerForm.fullName || registerForm.fullName.trim().length < 3) {
+      setRegisterError('Por favor, ingresa tu Nombre y Apellido.')
+      return
+    }
+
     // 1. Email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(registerForm.email)) {
       setRegisterError('Por favor, ingresa un correo electrónico válido.')
+      return
+    }
+
+    // 1.5 Phone format validation
+    const phoneRegex = /^[+0-9\s-]{7,15}$/
+    if (!phoneRegex.test(registerForm.phone)) {
+      setRegisterError('Por favor, ingresa un número de teléfono válido (entre 7 y 15 dígitos).')
       return
     }
 
@@ -128,9 +141,11 @@ function RegisterModalContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          fullName: registerForm.fullName,
           name: registerForm.username,
           email: registerForm.email,
           password: registerForm.password,
+          phone: registerForm.phone,
         }),
       })
 
@@ -185,7 +200,7 @@ function RegisterModalContent() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300">
       {/* Modal Dialog */}
-      <div className="bg-[#f3f4f6] text-[#111827] border border-zinc-200/80 rounded-2xl w-full max-w-[525px] shadow-2xl flex flex-col overflow-hidden animate-scale-up">
+      <div className="bg-[#f3f4f6] text-[#111827] border border-zinc-200/80 rounded-2xl w-full max-w-[420px] shadow-2xl flex flex-col overflow-hidden animate-scale-up">
 
         {/* --- VIEW: SUCCESS REGISTER (Image 1) --- */}
         {localView === 'success' && (
@@ -195,10 +210,10 @@ function RegisterModalContent() {
               <button
                 type="button"
                 onClick={handleClose}
-                className="absolute right-4 top-4 p-1 rounded-full text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 transition-all cursor-pointer"
+                className="absolute right-4 top-4 text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
                 aria-label="Cerrar modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6 stroke-[1.5]" />
               </button>
             </div>
 
@@ -210,12 +225,12 @@ function RegisterModalContent() {
               </div>
 
               {/* Title */}
-              <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 tracking-wide mb-2 select-none">
+              <h2 className="text-2xl font-bold text-zinc-900 mb-2 select-none">
                 ¡Listo!
               </h2>
 
               {/* Subtitle */}
-              <p className="text-sm sm:text-base font-bold text-zinc-500 mb-8 max-w-[320px] select-none leading-relaxed">
+              <p className="text-sm font-semibold text-zinc-500 mb-8 max-w-[320px] select-none leading-relaxed">
                 Ya puedes ingresar a tu cuenta
               </p>
 
@@ -223,7 +238,7 @@ function RegisterModalContent() {
               <button
                 type="button"
                 onClick={() => handleGoToLogin()}
-                className="w-full py-3.5 bg-[#f5c518] hover:bg-[#c49a10] active:scale-[0.99] text-black font-black text-sm uppercase tracking-widest rounded-lg transition-all cursor-pointer shadow-md flex items-center justify-center"
+                className="w-full py-3.5 bg-[#f5c518] hover:bg-[#d5ab12] active:scale-[0.99] text-zinc-950 font-bold text-base rounded-xl transition-all cursor-pointer shadow-md flex items-center justify-center"
               >
                 Acceder
               </button>
@@ -231,38 +246,57 @@ function RegisterModalContent() {
           </>
         )}
 
-        {/* --- VIEW: REGISTER (Image 1 of previous request) --- */}
+        {/* --- VIEW: REGISTER --- */}
         {localView === 'register' && (
           <>
             {/* Header Section with cream gradient */}
             <div
-              className="relative px-6 py-5 border-b border-zinc-200/60 flex items-center justify-center select-none"
+              className="relative px-6 py-6 flex items-center justify-center select-none"
               style={{
-                background: 'linear-gradient(to bottom, rgba(245, 197, 24, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
+                background: 'linear-gradient(to bottom, rgba(245, 197, 24, 0.12) 0%, rgba(255, 255, 255, 0) 100%)'
               }}
             >
-              <h2 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-wide text-center">
+              <h2 className="text-2xl font-bold text-zinc-900 text-center">
                 Registro
               </h2>
               <button
                 type="button"
                 onClick={handleClose}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 transition-all cursor-pointer"
+                className="absolute right-4 top-4 text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
                 aria-label="Cerrar modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6 stroke-[1.5]" />
               </button>
             </div>
 
             {/* Form Body */}
-            <form onSubmit={handleRegisterSubmit} className="p-6 sm:p-8 flex flex-col gap-5">
+            <form onSubmit={handleRegisterSubmit} className="px-6 pb-6 pt-4 flex flex-col gap-4">
+              {/* Nombre y Apellido */}
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="modal-fullname" className="text-sm font-semibold text-zinc-900">
+                  Nombre y Apellido
+                </label>
+                <div className="relative">
+                  <Contact className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                  <input
+                    type="text"
+                    id="modal-fullname"
+                    required
+                    value={registerForm.fullName}
+                    onChange={(e) => setRegisterForm({ ...registerForm, fullName: e.target.value })}
+                    placeholder="ejemplo: Maria Rodri"
+                    className="w-full pl-11 pr-4 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
+                  />
+                </div>
+              </div>
+
               {/* Correo electrónico */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="modal-email" className="text-xs font-black uppercase tracking-widest text-zinc-700">
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="modal-email" className="text-sm font-semibold text-zinc-900">
                   Correo electrónico
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                   <input
                     type="email"
                     id="modal-email"
@@ -270,18 +304,37 @@ function RegisterModalContent() {
                     value={registerForm.email}
                     onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                     placeholder="ejemplo@mail.com"
-                    className="w-full pl-11 pr-4 py-2.5 bg-zinc-200/80 border border-zinc-300 rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* Teléfono */}
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="modal-phone" className="text-sm font-semibold text-zinc-900">
+                  Teléfono
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                  <input
+                    type="tel"
+                    id="modal-phone"
+                    required
+                    value={registerForm.phone}
+                    onChange={(e) => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                    placeholder="+5832874232"
+                    className="w-full pl-11 pr-4 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
                   />
                 </div>
               </div>
 
               {/* Alias de usuario */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="modal-username" className="text-xs font-black uppercase tracking-widest text-zinc-700">
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="modal-username" className="text-sm font-semibold text-zinc-900">
                   Alias de usuario
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                   <input
                     type="text"
                     id="modal-username"
@@ -289,21 +342,21 @@ function RegisterModalContent() {
                     value={registerForm.username}
                     onChange={(e) => setRegisterForm({ ...registerForm, username: e.target.value })}
                     placeholder="Usuario"
-                    className="w-full pl-11 pr-4 py-2.5 bg-zinc-200/80 border border-zinc-300 rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
                   />
                 </div>
-                <span className="text-[10px] sm:text-xs text-zinc-500 select-none leading-normal">
+                <span className="text-xs text-zinc-500 select-none leading-normal">
                   Sólo letras y números sin espacios (4-12 caracteres)
                 </span>
               </div>
 
               {/* Contraseña */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="modal-password" className="text-xs font-black uppercase tracking-widest text-zinc-700">
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="modal-password" className="text-sm font-semibold text-zinc-900">
                   Contraseña
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                   <input
                     type={showRegisterPass ? 'text' : 'password'}
                     id="modal-password"
@@ -311,30 +364,30 @@ function RegisterModalContent() {
                     value={registerForm.password}
                     onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
                     placeholder="Ingresa tu contraseña"
-                    className="w-full pl-11 pr-11 py-2.5 bg-zinc-200/80 border border-zinc-300 rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                    className="w-full pl-11 pr-11 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowRegisterPass(!showRegisterPass)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-zinc-800 transition-colors cursor-pointer"
                   >
-                    {showRegisterPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showRegisterPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                <span className="text-[10px] sm:text-xs text-zinc-500 select-none leading-normal">
+                <span className="text-xs text-zinc-500 select-none leading-normal">
                   Mínimo 8 caracteres, 1 letra y 1 número
                 </span>
               </div>
 
               {/* Checkbox: Términos y Condiciones */}
-              <label className="flex items-start gap-2.5 cursor-pointer text-left select-none">
+              <label className="flex items-start gap-2.5 cursor-pointer text-left select-none mt-1">
                 <input
                   type="checkbox"
                   checked={registerAcceptedTerms}
                   onChange={(e) => setRegisterAcceptedTerms(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded text-yellow-500 border-zinc-300 focus:ring-yellow-500 cursor-pointer"
+                  className="mt-0.5 w-4 h-4 rounded border-2 border-zinc-650 text-yellow-500 focus:ring-yellow-500 cursor-pointer !bg-white"
                 />
-                <span className="text-xs sm:text-sm font-semibold text-zinc-700 leading-tight">
+                <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-tight">
                   He leído y acepto los Términos y Condiciones
                 </span>
               </label>
@@ -350,19 +403,19 @@ function RegisterModalContent() {
               <button
                 type="submit"
                 disabled={registerLoading}
-                className="w-full py-3 bg-[#f5c518] hover:bg-[#c49a10] active:scale-[0.99] text-black font-black text-sm uppercase tracking-widest rounded-lg transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#f5c518] hover:bg-[#d5ab12] active:scale-[0.99] text-zinc-950 font-bold text-base rounded-xl transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
               >
-                {registerLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                {registerLoading && <Loader2 className="w-5 h-5 animate-spin" />}
                 {registerLoading ? 'Continuando...' : 'Continuar'}
               </button>
 
               {/* Footer Link */}
-              <p className="text-center text-xs sm:text-sm font-semibold text-zinc-600 mt-2 select-none">
+              <p className="text-center text-sm font-semibold text-zinc-800 mt-2 select-none">
                 ¿Tienes una cuenta?{' '}
                 <button
                   type="button"
                   onClick={handleGoToLogin}
-                  className="text-[#f5c518] hover:text-[#c49a10] font-black cursor-pointer hover:underline transition-colors ml-1"
+                  className="text-zinc-950 hover:text-black font-extrabold cursor-pointer hover:underline transition-colors ml-1"
                 >
                   Acceder
                 </button>
@@ -371,38 +424,38 @@ function RegisterModalContent() {
           </>
         )}
 
-        {/* --- VIEW: LOGIN (Image 2) --- */}
+        {/* --- VIEW: LOGIN --- */}
         {localView === 'login' && (
           <>
             {/* Header Section with cream gradient */}
             <div
-              className="relative px-6 py-5 border-b border-zinc-200/60 flex items-center justify-center select-none"
+              className="relative px-6 py-6 flex items-center justify-center select-none"
               style={{
-                background: 'linear-gradient(to bottom, rgba(245, 197, 24, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
+                background: 'linear-gradient(to bottom, rgba(245, 197, 24, 0.12) 0%, rgba(255, 255, 255, 0) 100%)'
               }}
             >
-              <h2 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-wide text-center">
+              <h2 className="text-2xl font-bold text-zinc-900 text-center">
                 Acceder
               </h2>
               <button
                 type="button"
                 onClick={handleClose}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 transition-all cursor-pointer"
+                className="absolute right-4 top-4 text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
                 aria-label="Cerrar modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6 stroke-[1.5]" />
               </button>
             </div>
 
             {/* Form Body */}
-            <form onSubmit={handleLoginSubmit} className="p-6 sm:p-8 flex flex-col gap-5">
+            <form onSubmit={handleLoginSubmit} className="px-6 pb-6 pt-4 flex flex-col gap-4">
               {/* Usuario o email */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="login-username-email" className="text-xs font-black uppercase tracking-widest text-zinc-700">
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="login-username-email" className="text-sm font-semibold text-zinc-900">
                   Usuario o email
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                   <input
                     type="text"
                     id="login-username-email"
@@ -410,18 +463,18 @@ function RegisterModalContent() {
                     value={loginForm.usernameOrEmail}
                     onChange={(e) => setLoginForm({ ...loginForm, usernameOrEmail: e.target.value })}
                     placeholder="Usuario"
-                    className="w-full pl-11 pr-4 py-2.5 bg-zinc-200/80 border border-zinc-300 rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
                   />
                 </div>
               </div>
 
               {/* Contraseña */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="login-password" className="text-xs font-black uppercase tracking-widest text-zinc-700">
+              <div className="flex flex-col gap-1 text-left">
+                <label htmlFor="login-password" className="text-sm font-semibold text-zinc-900">
                   Contraseña
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                   <input
                     type={showLoginPass ? 'text' : 'password'}
                     id="login-password"
@@ -429,14 +482,14 @@ function RegisterModalContent() {
                     value={loginForm.password}
                     onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                     placeholder="Ingresa tu contraseña"
-                    className="w-full pl-11 pr-11 py-2.5 bg-zinc-200/80 border border-zinc-300 rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                    className="w-full pl-11 pr-11 py-3 !bg-[#e5e7eb] !border-transparent rounded-lg text-sm text-[#111827] placeholder-zinc-400 outline-none focus:!bg-[#dcdce2] transition-all font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowLoginPass(!showLoginPass)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-zinc-800 transition-colors cursor-pointer"
                   >
-                    {showLoginPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showLoginPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
@@ -452,19 +505,19 @@ function RegisterModalContent() {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3 bg-[#f5c518] hover:bg-[#c49a10] active:scale-[0.99] text-black font-black text-sm uppercase tracking-widest rounded-lg transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#f5c518] hover:bg-[#d5ab12] active:scale-[0.99] text-zinc-950 font-bold text-base rounded-xl transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
               >
-                {loginLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                {loginLoading && <Loader2 className="w-5 h-5 animate-spin" />}
                 {loginLoading ? 'Continuando...' : 'Continuar'}
               </button>
 
               {/* Footer Link */}
-              <p className="text-center text-xs sm:text-sm font-semibold text-zinc-600 mt-2 select-none">
+              <p className="text-center text-sm font-semibold text-zinc-800 mt-2 select-none">
                 ¿No tienes una cuenta?{' '}
                 <button
                   type="button"
                   onClick={handleGoToRegister}
-                  className="text-[#f5c518] hover:text-[#c49a10] font-black cursor-pointer hover:underline transition-colors ml-1"
+                  className="text-zinc-950 hover:text-black font-extrabold cursor-pointer hover:underline transition-colors ml-1"
                 >
                   Regístrate
                 </button>

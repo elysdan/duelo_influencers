@@ -6,9 +6,9 @@ import bcrypt from 'bcryptjs'
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json()
+    const { name, email, password, phone, fullName } = await request.json()
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone || !fullName) {
       return NextResponse.json(
         { error: 'Todos los campos son requeridos' },
         { status: 400 }
@@ -43,6 +43,8 @@ export async function POST(request: Request) {
         name: name.trim(),
         email: email.toLowerCase().trim(),
         passwordHash,
+        phone: phone.trim(),
+        fullName: fullName.trim(),
       })
       .returning({ id: users.id, name: users.name, email: users.email })
 

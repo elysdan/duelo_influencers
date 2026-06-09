@@ -76,6 +76,9 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
   const [isEditing, setIsEditing] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  
+  const hasInstagram = !!(player.instagramUrl && player.instagramUrl.trim() !== '')
+  const hasYoutube = !!(player.youtubeUrl && player.youtubeUrl.trim() !== '')
 
   // Delete action states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -138,8 +141,7 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
     })
   }
 
-  // Format ID string, e.g. ID_G-001
-  const formattedId = `ID_G-${String(player.number ?? 1).padStart(3, '0')}`
+
 
   return (
     <div className="bg-[#eaeaea] text-[#1a1a1a] rounded-3xl p-6 sm:p-10 shadow-md">
@@ -188,14 +190,7 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
           <div className="flex flex-col gap-4 w-full max-w-[330px] mx-auto">
             {/* Card Frame */}
             <div className="bg-[#6e6e6e] rounded-2xl overflow-hidden p-4 shadow-xl flex flex-col gap-4">
-              {/* Card Header: ID & Online status */}
-              <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider px-1 text-yellow-500">
-                <span>{formattedId}</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.7)]" />
-                  En Línea
-                </span>
-              </div>
+
 
               {/* Portrait Image Frame */}
               <div className="rounded-xl overflow-hidden aspect-[4/5] bg-neutral-800 relative">
@@ -212,37 +207,31 @@ export default function InfluencerProfileDetails({ player, isAdmin }: Influencer
             </div>
 
             {/* Social Media Buttons */}
-            <div className="grid grid-cols-2 gap-4">
-              {player.instagramUrl ? (
-                <a
-                  href={player.instagramUrl.trim().startsWith('http') ? player.instagramUrl.trim() : `https://${player.instagramUrl.trim()}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
-                >
-                  {getPlatformName(player.instagramUrl, 'Instagram')}
-                </a>
-              ) : (
-                <div className="bg-[#2c2c2c]/40 text-zinc-500 py-3 rounded-lg text-center font-black text-xs uppercase tracking-widest cursor-not-allowed select-none">
-                  Instagram
-                </div>
-              )}
+            {(hasInstagram || hasYoutube) && (
+              <div className={`grid gap-4 ${hasInstagram && hasYoutube ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                {hasInstagram && (
+                  <a
+                    href={player.instagramUrl!.trim().startsWith('http') ? player.instagramUrl!.trim() : `https://${player.instagramUrl!.trim()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
+                  >
+                    {getPlatformName(player.instagramUrl, 'Instagram')}
+                  </a>
+                )}
 
-              {player.youtubeUrl ? (
-                <a
-                  href={player.youtubeUrl.trim().startsWith('http') ? player.youtubeUrl.trim() : `https://${player.youtubeUrl.trim()}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
-                >
-                  {getPlatformName(player.youtubeUrl, 'YouTube')}
-                </a>
-              ) : (
-                <div className="bg-[#2c2c2c]/40 text-zinc-500 py-3 rounded-lg text-center font-black text-xs uppercase tracking-widest cursor-not-allowed select-none">
-                  YouTube
-                </div>
-              )}
-            </div>
+                {hasYoutube && (
+                  <a
+                    href={player.youtubeUrl!.trim().startsWith('http') ? player.youtubeUrl!.trim() : `https://${player.youtubeUrl!.trim()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#2c2c2c] hover:bg-[#3d3d3d] text-yellow-500 hover:text-yellow-400 py-3 rounded-lg text-center font-black text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.02] active:scale-95"
+                  >
+                    {getPlatformName(player.youtubeUrl, 'YouTube')}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Right Column: Profile Info */}
