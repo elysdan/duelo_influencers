@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,7 +17,25 @@ const NAV_LINKS = [
 
 export default function Navbar({ userName }: { userName?: string | null }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const handleOpenLogin = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const params = new URLSearchParams(window.location.search)
+    params.set('login', 'true')
+    params.delete('register')
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  const handleOpenRegister = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const params = new URLSearchParams(window.location.search)
+    params.set('register', 'true')
+    params.delete('login')
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -93,14 +111,16 @@ export default function Navbar({ userName }: { userName?: string | null }) {
               ) : (
                 <>
                   <Link
-                    href="/login"
+                    href="?login=true"
+                    onClick={handleOpenLogin}
                     className="text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:text-white"
                     style={{ color: 'var(--text-secondary)', border: '1px solid var(--border)' }}
                   >
                     Iniciar sesión
                   </Link>
                   <Link
-                    href="/register"
+                    href="?register=true"
+                    onClick={handleOpenRegister}
                     className="text-sm px-4 py-2 rounded-lg font-semibold transition-all duration-200 hover:opacity-90"
                     style={{
                       background: 'var(--yellow)',
@@ -169,16 +189,22 @@ export default function Navbar({ userName }: { userName?: string | null }) {
               ) : (
                 <>
                   <Link
-                    href="/login"
-                    onClick={() => setMenuOpen(false)}
+                    href="?login=true"
+                    onClick={(e) => {
+                      setMenuOpen(false)
+                      handleOpenLogin(e)
+                    }}
                     className="flex-1 text-center text-sm px-4 py-2 rounded-lg"
                     style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   >
                     Iniciar sesión
                   </Link>
                   <Link
-                    href="/register"
-                    onClick={() => setMenuOpen(false)}
+                    href="?register=true"
+                    onClick={(e) => {
+                      setMenuOpen(false)
+                      handleOpenRegister(e)
+                    }}
                     className="flex-1 text-center text-sm px-4 py-2 rounded-lg font-semibold"
                     style={{ background: 'var(--yellow)', color: '#000' }}
                   >

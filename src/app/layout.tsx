@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { ToastProvider } from '@/components/ui/ToastProvider'
 import { SmoothScrollProvider } from '@/components/layout/SmoothScrollProvider'
+import RegisterModal from '@/components/auth/RegisterModal'
 
 const montserrat = localFont({
   src: '../../public/fonts/Montserrat-Variable.woff2',
@@ -52,9 +53,11 @@ export default function RootLayout({
         <SmoothScrollProvider>
           <ToastProvider>
             {children}
+            <RegisterModal />
           </ToastProvider>
         </SmoothScrollProvider>
       </body>
     </html>
   )
 }
+
